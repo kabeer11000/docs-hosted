@@ -1,0 +1,1 @@
+<script>document.write(new Date())<script>

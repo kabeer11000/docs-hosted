@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script> 
+$(function() {
+    var win;
+    var checkConnect;
+    var $connect = $(".connect");
+    var oAuthURL = "https://kabeers-auth.herokuapp.com/user/authorize/cb1cb94164a10fa702c09aa0f3e2fd3f8e77a73e/https%3A%2F%2Fhosted-kabeersnetwork.000webhostapp.com%2F1111%2FrCode.php/username:email:account_image/123/none";
+    $connect.click(function() {
+        win = window.open(oAuthURL, 'SomeAuthentication', 'width=500,height=660,modal=yes,alwaysRaised=yes');
+    });
+
+    checkConnect = setInterval(function() {
+        if (!win || !win.closed) return;
+        clearInterval(checkConnect);
+
+        
+        //$('#flip').html('FUCL')
+        //window.location.reload();
+    }, 100);
+});
+
+// opener:
+window.onmessage = function (e) {
+  if (e.data) {
+    console.log(e);
+    $('#flip').html(JSON.stringify(e.data))
+  }
+};
+</script>
+<div class="connect k-net-login-btn-"><img alt="Login With Kabeers Network" src="https://cdn.jsdelivr.net/gh/kabeer11000/kauthsdk-php/dist/light.svg" style="width:auto;height:5rem"></div>
+<style> 
+#panel, #flip {
+  padding: 5px;
+  text-align: center;
+  background-color: #e5eecc;
+  border: solid 1px #c3c3c3;
+}
+
+#panel {
+  padding: 50px;
+  display: none;
+}
+</style>
+</head>
+<body>
+<input/> 
+<div id="flip">Click to slide down panel</div>
+<div id="panel">Hello world!</div>
+
+</body>
+</html>

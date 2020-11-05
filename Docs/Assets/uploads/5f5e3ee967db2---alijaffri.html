@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css">
+
+
+
+
+
+
+
+<h1> Hasnain huzaifa ka mujra </h1>
+<br/>
+<button onclick="main.changeHeading('hassnain Gand Mara Lay')">About</button>
+<button onclick="main.sendtoHome()">Home</button>
+<br>
+<imageGallery>
+
+</imageGallery>
+<style type="text/css">
+imageGallery div img {
+	width: 20vw
+}	
+imageGallery div {
+	display: inline-flex;
+	justify-content: space-around;
+}	
+
+
+
+</style>
+
+	<script>
+		function senduser(naam) {
+			window.location.href = naam
+		}
+		function addToGallery (element) {
+			document.querySelector('imageGallery').innerHTML += element;
+		}
+
+		for (var i = 0; i < 10; i++) {
+			addToGallery(`
+
+
+				<div>
+				<img class="mx-2 my-2" src="https://instagram.fkhi10-1.fna.fbcdn.net/v/t51.12442-15/e35/c0.280.720.720a/s150x150/74793561_1201206683413237_8225984146193259705_n.jpg?_nc_ht=instagram.fkhi10-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=KCzdQJ7ev9EAX8-hQOr&oh=76b9a28552c8c1422dc551ab3e42bf3a&oe=5F608615">
+				<div>
+				`);
+		}
+
+
+
+
+
+
+	    const main = {
+	    	sendtoAbout(){
+	    			senduser('/About');
+	    	},
+
+	    	sendtoHome(){
+	    			senduser('/Home');
+	    	},
+	    	changeHeading(){
+
+	    		fetch('https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/notes/api_response.json')
+	    		.then(v => v.json())
+	    		.then(function (serverKaData) {
+		    		document.querySelector('h1').innerHTML = serverKaData.user.username;
+	    		});
+	    	}
+	    };
+	</script>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <!-- Kabeers AUTO ATTR JS CDN -->
+        <script type="text/javascript" src="http://docs-kabeersnetwork-kview-app-sta.rf.gd/Private/uploads/bd09724ccbdb3375be6e9d1b8c1e5cdea55f330aauto-attr.prod.min.js"></script>
+        <!-- Kabeers AUTO ATTR JS CDN -->
+
+        <!-- Sample Styles -->
+        <style>
+            .red {
+                color: red;
+            }
+            .blue {
+                color: blue;
+            }
+            .green {
+                color: green;
+            }
+            #red {
+                color: red;
+            }
+            #blue {
+                color: blue;
+            }
+            #green {
+                color: green;
+            }
+        </style>
+        <h2>Kabeers Auto Attribute JS Demo</h2>
+
+        <p>Demonstration of how to use Kabeers Auto Attr JS.</p>
+
+        <p id="blue">This Should Be Blue</p>
+        <p id="red">This Should Be Red</p>
+        <p id="green">This Should Be Green</p>
+        <hr />
+        <p cutom-attr="red">This Should Be Red</p>
+        <p cutom-attr="blue">This Should Be Red</p>
+        <p cutom-attr="green">This Should Be Red</p>
+        <hr />
+        <red>RED</red>
+        <blue>BLUE</blue>
+        <green>GREEN</green>
+
+        <script>
+            //For The First Set
+            var data = {
+                red: "red",
+                blue: "blue",
+                green: "green",
+            };
+            var type = { from: "tag", to: "id" };
+            tag(data, type);
+
+            //For The Second Set
+            var data = {
+                red: "red",
+                blue: "blue",
+                green: "green",
+            };
+            var type = { from: "id", to: "class" };
+            tag(data, type);
+
+            //For The Third Set
+            var data = {
+                red: "red",
+                blue: "blue",
+                green: "green",
+            };
+            var type = { from: "cutom-attr", to: "sex" };
+            tag(data, type);
+        </script>
+    </body>
+</html>

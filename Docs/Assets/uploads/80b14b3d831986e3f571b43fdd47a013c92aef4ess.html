@@ -1,0 +1,47 @@
+<script src="http://docs-kabeersnetwork-kview-app-sta.rf.gd/Private/uploads/c87e83d5513f94a346463366770d33755931bd2akswipe.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+}
+h1{
+font-family: 'Roboto', sans-serif;
+color:#FFF;
+padding:2.5rem;
+padding-bottom:0;
+font-size:5rem;
+}
+#image{
+transition-duration:0.05s;
+}
+small:hover::after{
+content:'SwiperJS By Kabeers Network';
+}
+small{
+font-family: 'Roboto', sans-serif;
+color:#FFF;
+padding:1rem;
+transition:0.05s;
+}
+#image{
+height:78.7%;
+width:100%;
+background-image: url(http://www.imgim.com/703incia1993743.gif), linear-gradient(#74ebd5, #ACB6E5);
+padding-bottom:5rem;
+}
+#image:hover{
+cursor:pointer;
+transition:0.05s;
+}
+</style>
+<div id="image">
+   <center>
+   <small>
+    <h1>Swipe</h1>
+   </small>
+  </center>
+</div>
+<script>
+(new Swipe('#image')).onLeft(function() { alert('You swiped left.') }).run();</script>

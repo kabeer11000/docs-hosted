@@ -1,0 +1,824 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+    <title>Gravatar - Globally Recognized Avatars</title>
+    <base href="http://en.gravatar.com/site/implement/images/php/">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Language" content="en"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="http://s.gravatar.com/dist/css/style.min.css?136" type="text/css" rel="stylesheet" media="screen"/>
+    <link href="http://s.gravatar.com/dist/css/profile.min.css?136" type="text/css" rel="stylesheet" media="screen"/>
+    <link href="http://s.gravatar.com/dist/css/jquery.Jcrop.0.9.12.min.css?136" type="text/css" rel="stylesheet"
+          media="screen"/>
+    <script type="text/javascript" src="http://s.gravatar.com/js/jquery.js?136"></script>
+    <script type="text/javascript" src="http://s.gravatar.com/js/jquery-migrate.js?136"></script>
+    <script type="text/javascript" src="http://s.gravatar.com/js/jquery.Jcrop.0.9.12.js?136"></script>
+    <script type="text/javascript" src="http://s.gravatar.com/js/application.js?136"></script>
+    <script type="text/javascript" src="http://s.gravatar.com/js/jcarousel/lib/jquery.jcarousel.pack.js?136"></script>
+    <link rel="stylesheet" type="text/css" href="/js/jcarousel/lib/jquery.jcarousel.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/jcarousel/skins/tango/skin.css"/>
+    <style type="text/css">
+        /* Fonts */
+        @font-face {
+            font-family: 'Automatticons';
+            src: url('http://s.gravatar.com/fonts/automatticons-regular-webfont.eot');
+            src: url('http://s.gravatar.com/fonts/automatticons-regular-webfont.eot?#iefix') format('embedded-opentype'), url('http://s.gravatar.com/fonts/automatticons-regular-webfont.woff') format('woff'), url('http://s.gravatar.com/fonts/automatticons-regular-webfont.ttf') format('truetype'), url('http://s.gravatar.com/fonts/automatticons-regular-webfont.svg#automatticonsregular') format('svg');
+            font-weight: normal;
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+
+    <script type='text/javascript'
+            src='//s1.wp.com/_static/??/wp-includes/js/swfobject.js,/wp-content/plugins/video/assets/js/videopress.js?m=1340848398j'></script>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600&subset=latin"
+          rel="stylesheet" type="text/css">
+
+    <script type="text/javascript" src="/js/webtoolkit.base64.js"></script>
+    <!--[if lt IE 7.]>
+    <script defer type="text/javascript" src="/js/pngfix.js"></script>
+    <script defer type="text/javascript" src="/js/old-ie-hacks.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="//use.typekit.com/llx8brg.js"></script>
+    <script type="text/javascript">try {
+        Typekit.load();
+    } catch (e) {
+    }</script>
+
+
+    <script src="/js/login.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#a8c-service-toggle').click(function () {
+                var body = $('body'),
+                    header = $('#unified-header'),
+                    dops = $('#a8c-dops');
+
+                $(this).parent().toggleClass('active');
+                body.toggleClass('dropped');
+                header.toggleClass('dropped');
+                dops.toggleClass('dropped');
+            });
+
+            $("#responsive-menu-button").click(function (a) {
+                a.preventDefault();
+                $(".main-nav").toggleClass("dropped");
+            })
+
+        });
+    </script>
+
+    <link rel="stylesheet" href="//s0.wp.com/i/noticons/noticons.css">
+
+</head>
+
+
+<body id="pagesite-implement-images-php">
+
+<div id="wrap">
+    <div id="a8c-dops">
+        <ul>
+            <li class="wordpresscom">
+                <a href="http://wordpress.com">
+                    <strong>WordPress.com</strong>
+                    <small>Create a free website.</small>
+                </a>
+            </li>
+            <li class="vaultpress">
+                <a href="http://vaultpress.com">
+                    <strong>VaultPress</strong>
+                    <small>Backup and security scanning for your site.</small>
+                </a>
+            </li>
+            <li class="akismet">
+                <a href="http://akismet.com">
+                    <strong>Akismet</strong>
+                    <small>The anti-spam service for the web.</small>
+                </a>
+            </li>
+            <li class="crowdsignal">
+                <a href="https://crowdsignal.com">
+                    <img class="a8c-dops__logo" src="/images/logo-crowdsignal.svg" alt="Crowdsignal"/>
+                    <strong>Crowdsignal</strong>
+                    <small>Create surveys for the web and mobile.</small>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="unified-header">
+        <nav>
+            <ul class="main-nav">
+                <li>
+                    <a href="/" id="gr-logo">G</a>
+                    <a href="/" id="responsive-menu-button" class="icon">Menu</a>
+                </li>
+                <li><a href="/support/what-is-gravatar/">What is Gravatar?</a></li>
+                <li><a href="/site/implement/">How to Use Gravatar</a></li>
+                <li><a href="/support/">Help</a></li>
+            </ul>
+
+            <ul class="user-nav">
+                <li id="wpcc-sign-in">
+                    <span class="wpcom" id="a8c-service-toggle"><span>WordPress.com</span></span>
+                    <a href="https://en.gravatar.com/connect/" class="button header_sign-in">Sign In</a>
+                </li>
+            </ul>
+
+        </nav>
+    </div>
+
+
+    <div id="main">
+        <div class="middle">
+            <div class="box">
+                <div id="content">
+
+                    <script type="text/javascript" src="/js/SyntaxHighlighter/scripts/shCore.js"></script>
+                    <script type="text/javascript" src="/js/SyntaxHighlighter/scripts/shBrushPhp.js"></script>
+                    <link type="text/css" rel="stylesheet" href="/js/SyntaxHighlighter/styles/shCore.css"/>
+                    <link type="text/css" rel="stylesheet" href="/js/SyntaxHighlighter/styles/shThemeDefault.css"/>
+                    <script type="text/javascript">
+                        SyntaxHighlighter.defaults['toolbar'] = false;
+                        SyntaxHighlighter.all();
+                    </script>
+                    <h2>PHP Image Requests</h2>
+                    <p><a href="../../">← Back</a></p>
+
+                    <p>Implementing gravatars with PHP is quite simple. PHP provides <code>strtolower()</code>, <code>md5()</code>,
+                        and <code>urlencode()</code> functions, allowing us to create the gravatar URL with ease. Assume
+                        the following data:</p>
+                    <pre class="brush: php">$email = "someone@somewhere.com";
+$default = "https://www.somewhere.com/homestar.jpg";
+$size = 40;</pre>
+                    <p>You can construct your gravatar url with the following php code:</p>
+                    <pre class="brush: php">$grav_url = "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $email ) ) ) . "?d=" . urlencode( $default ) . "&s=" . $size;</pre>
+                    <p>Once the gravatar URL is created, you can output it whenever you please:</p>
+                    <pre class="brush: php">&lt;img src="&lt;?php echo $grav_url; ?>" alt="" /></pre>
+
+                    <h3 id="example">Example Implementation</h3>
+                    <p>This function will allow you to quickly and easily insert a Gravatar into a page using PHP:</p>
+                    <pre class="brush: php">
+	/**
+	 * Get either a Gravatar URL or complete image tag for a specified email address.
+	 *
+	 * @param string $email The email address
+	 * @param string $s Size in pixels, defaults to 80px [ 1 - 2048 ]
+	 * @param string $d Default imageset to use [ 404 | mp | identicon | monsterid | wavatar ]
+	 * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
+	 * @param boole $img True to return a complete IMG tag False for just the URL
+	 * @param array $atts Optional, additional key/value attributes to include in the IMG tag
+	 * @return String containing either just a URL or a complete image tag
+	 * @source https://gravatar.com/site/implement/images/php/
+	 */
+	function get_gravatar( $email, $s = 80, $d = 'mp', $r = 'g', $img = false, $atts = array() ) {
+		$url = 'https://www.gravatar.com/avatar/';
+		$url .= md5( strtolower( trim( $email ) ) );
+		$url .= "?s=$s&d=$d&r=$r";
+		if ( $img ) {
+			$url = '&lt;img src="' . $url . '"';
+			foreach ( $atts as $key => $val )
+				$url .= ' ' . $key . '="' . $val . '"';
+			$url .= ' /&gt;';
+		}
+		return $url;
+	}
+</pre>
+
+                    <h3>Existing Implementations</h3>
+                    <ul>
+                        <li><a href="http://www.phpclasses.org/browse/package/4227.html">The Gravatar Class</a></li>
+                        <li><a href="https://github.com/emberlabs/gravatarlib">Namespaced Gravatar library</a></li>
+                    </ul>
+
+                </div>
+                <span class="clear"></span>
+            </div>
+            <span class="clear"></span>
+        </div>
+        <span class="clear"></span>
+    </div>
+
+    <div id="footer">
+        <div class="footer-inner">
+            <div class="primary">
+                <ul id="vp-primary-footer">
+                    <li><a href="http://blog.gravatar.com/">Blog</a></li>
+                    <li><a href="/site/implement/">Developer Resources</a></li>
+                    <li><a href="/support/">Technical Support</a></li>
+                </ul>
+
+                <div id="a8c-attribution">
+                    <span>An <a href="http://automattic.com/">Automattic</a> Team</span>
+                </div>
+            </div>
+
+            <div class="secondary">
+                <ul id="vp-secondary-footer">
+                    <li><a href="/site/translations/">Languages</a></li>
+                    <li><a href="http://automattic.com/privacy/">Privacy Policy</a></li>
+                </ul>
+
+                <ul id="a8c-services">
+                    <li><a href="https://wordpress.com">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 157.6 32">
+                            <path class="wordmark"
+                                  d="M26.3 10.4c-3.9 0-5.7 2.5-5.7 6s1.8 5.9 5.7 5.9c3.9 0 5.7-2.5 5.7-5.9 0-3.5-1.8-6-5.7-6zm0 9.6c-1.8 0-2.8-1.2-2.8-3.7s1-3.7 2.8-3.7 2.8 1.2 2.8 3.7-1 3.7-2.8 3.7zM18 6l-3.2 12.2L11.7 6H8.4l.7 2.6-2.8 10L3.3 6H.2l4.3 16H8l2.6-8.5L13 22h3.4L21 6h-3zm32.5 4.6c-.8-.2-1.4-.3-2.1-.3-3.9 0-6 2.6-6 6.4 0 3.8 2.1 5.5 4.6 5.5 1.2 0 2.7-.6 3.7-1.3v1h2.7V6h-2.8v4.6zm0 8.1c-.9.8-1.8 1.3-2.7 1.3-1.6 0-2.6-1-2.6-3.4 0-2.6 1.2-4 3.4-4 .7 0 1.4.2 1.8.4v5.7zM62 6h-5.2v16h3v-5.6H62c3.4 0 5.9-1.8 5.9-5.3C67.9 7.7 65.4 6 62 6zm0 8.1h-2.2V8.4H62c1.8 0 2.7 1 2.7 2.8 0 1.7-.8 2.9-2.7 2.9zm-25-1.6l-.1-1.9h-2.6V22h2.8v-6.8c.9-1.7 2-2.2 3.7-2.2h.3v-2.5h-.8c-1.4 0-2.5.6-3.3 2zm46.1-2.1c-3.6 0-5.5 2.8-5.5 5.9 0 4.2 2.2 6 5.8 6 1.5 0 2.7-.2 4.2-.6v-2.3c-1.2.4-2.2.7-3.4.7-2.1 0-3.5-.6-3.6-3.1h7.3c0-.5.1-.9.1-1.7 0-2.4-1.2-4.9-4.9-4.9zm-2.4 4.7c.2-1.6 1-2.6 2.4-2.6 1.5 0 2 1.2 2 2.6h-4.4zm51.3-4.7c-3.9 0-5.7 2.5-5.7 6s1.8 5.9 5.7 5.9c3.9 0 5.7-2.5 5.7-5.9 0-3.5-1.9-6-5.7-6zm0 9.6c-1.8 0-2.8-1.2-2.8-3.7s1-3.7 2.8-3.7 2.8 1.2 2.8 3.7-1 3.7-2.8 3.7zm21.8-9.6c-1.2 0-2.6.7-3.9 1.5l-.3.2c-.6-1.3-1.8-1.7-3.1-1.7-1.2 0-2.6.6-3.9 1.5v-1.2H140V22h2.8v-8.1c1-.7 2.2-1.1 3-1.1.9 0 1.5.5 1.5 2.1V22h2.8v-8.1c1-.7 2.2-1.1 3-1.1.9 0 1.5.5 1.5 2.1V22h2.8v-7.8c0-2.2-1.3-3.8-3.6-3.8zM118 16.2c0-2.6 1.5-3.6 3.2-3.6 1.1 0 2.3.3 3.2.6v-2.4c-1-.3-1.8-.5-3.2-.5-3.7 0-6.1 2.3-6.1 6 0 3.5 1.7 5.9 5.9 5.9 1.3 0 2.4-.3 3.5-.6v-2.3c-1.3.5-2.3.7-3.2.7-1.8 0-3.3-.9-3.3-3.8zm-7.4 5.8h2.8v-2.9h-2.8V22zm-17.7-8.2c0-.9.9-1.2 1.9-1.2 1.6 0 3.1.5 3.1.5v-2.3c-1-.3-2.1-.4-3.4-.4-2.7 0-4.6 1.3-4.6 3.4 0 4.1 5.6 3 5.6 5 0 1-.9 1.2-2.2 1.2-.9 0-2.4-.4-3.4-.7v2.3c.9.3 2.1.7 3.3.7 2.6 0 5.2-.8 5.2-3.6.1-4-5.5-3-5.5-4.9zm-20.6-1.3l-.1-1.9h-2.6V22h2.8v-6.8c.9-1.7 2-2.2 3.7-2.2h.3v-2.5h-.8c-1.4 0-2.5.6-3.3 2zm30.9 1.3c0-.9.9-1.2 1.9-1.2 1.6 0 3.1.5 3.1.5v-2.3c-1-.3-2.1-.4-3.4-.4-2.7 0-4.6 1.3-4.6 3.4 0 4.1 5.6 3 5.6 5 0 1-.9 1.2-2.2 1.2-.9 0-2.4-.4-3.4-.7v2.3c.9.3 2.1.7 3.3.7 2.6 0 5.2-.8 5.2-3.6.1-4-5.5-3-5.5-4.9z"/>
+                        </svg>
+                    </a></li>
+                    <li><a href="https://jetpack.com">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 32">
+
+                            <path class="logomark"
+                                  d="M16 0C7.2 0 0 7.2 0 16s7.2 16 16 16 16-7.2 16-16S24.8 0 16 0zm-1 19H7l8-16v16zm2 10V13h8l-8 16z"/>
+                            <path class="wordmark"
+                                  d="M41.3 26.6c-.5-.7-.9-1.4-1.3-2.1 2.3-1.4 3-2.5 3-4.6V8h-3V6h6v13.4c0 3.4-1 5.4-4.7 7.2zM65 18.4c0 1.1.8 1.3 1.4 1.3.5 0 2-.2 2.6-.4v2.1c-.9.3-2.5.5-3.7.5-1.5 0-3.2-.5-3.2-3.1V12H60v-2h2.1V7.1H65V10h4v2h-4v6.4zM71 10h3v1.3c1.1-.8 1.9-1.3 3.3-1.3 2.5 0 4.5 1.8 4.5 5.6s-2.2 6.3-5.8 6.3c-.9 0-1.3-.1-2-.3V28h-3V10zm5.5 2.3c-.8 0-1.6.4-2.5 1.2v5.9c.6.1.9.2 1.8.2 2 0 3.2-1.3 3.2-3.9 0-2.3-.9-3.4-2.5-3.4zM93 22h-3v-1.5c-.9.7-1.9 1.5-3.5 1.5-1.5 0-3.1-1.1-3.1-3.2 0-2.9 2.5-3.4 4.2-3.7l2.4-.3v-.3c0-1.5-.5-2.3-2-2.3-.7 0-2.3.5-3.7 1.1L84 11c1.2-.4 3-1 4.4-1 2.7 0 4.6 1.4 4.6 4.7V22zm-3-5.6l-2.2.4c-.7.1-1.4.5-1.4 1.6 0 .9.5 1.4 1.3 1.4s1.5-.5 2.3-1v-2.4zM104.5 21.3c-1.1.4-2.2.6-3.5.6-4.2 0-5.9-2.4-5.9-5.9 0-3.7 2.3-6 6.1-6 1.4 0 2.3.2 3.2.5V13c-.8-.3-2-.6-3.2-.6-1.7 0-3.2.9-3.2 3.6 0 2.9 1.5 3.8 3.3 3.8.9 0 1.9-.2 3.2-.7v2.2zM110 15.2c.2-.3.2-.8 3.8-5.2h3.7l-4.6 5.7 5 6.3h-3.7l-4.2-5.8V22h-3V6h3v9.2zM58.5 21.3c-1.5.5-2.7.6-4.2.6-3.6 0-5.8-1.8-5.8-6 0-3.1 1.9-5.9 5.5-5.9s4.9 2.5 4.9 4.9c0 .8 0 1.5-.1 2h-7.3c.1 2.5 1.5 2.8 3.6 2.8 1.1 0 2.2-.3 3.4-.7v2.3zM56 15c0-1.4-.5-2.9-2-2.9-1.4 0-2.3 1.3-2.4 2.9H56z"/>
+                        </svg>
+                    </a></li>
+                    <li><a href="https://woocommerce.com">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                             viewBox="100 310 770 170">
+                            <g>
+                                <path class="logomark" fill-rule="evenodd" clip-rule="evenodd" d="M160.7,331.2h199.1c12.6,0,22.8,10.2,22.8,22.8V430
+    c0,12.6-10.2,22.8-22.8,22.8h-71.4l9.8,24l-43.1-24h-94.3c-12.6,0-22.8-10.2-22.8-22.8V354C137.9,341.5,148.1,331.2,160.7,331.2z"
+                                />
+                                <path class="logomark-text" d="M150.2,351.9c1.4-1.9,3.5-2.9,6.3-3.1c5.1-0.4,8,2,8.7,7.2c3.1,20.9,6.5,38.6,10.1,53.1l21.9-41.7
+    c2-3.8,4.5-5.8,7.5-6c4.4-0.3,7.1,2.5,8.2,8.4c2.5,13.3,5.7,24.6,9.5,34.2c2.6-25.4,7-43.7,13.2-55c1.5-2.8,3.7-4.2,6.6-4.4
+    c2.3-0.2,4.4,0.5,6.3,2c1.9,1.5,2.9,3.4,3.1,5.7c0.1,1.8-0.2,3.3-1,4.8c-3.9,7.2-7.1,19.3-9.7,36.1c-2.5,16.3-3.4,29-2.8,38.1
+    c0.2,2.5-0.2,4.7-1.2,6.6c-1.2,2.2-3,3.4-5.3,3.6c-2.6,0.2-5.3-1-7.9-3.7c-9.3-9.5-16.7-23.7-22.1-42.6
+    c-6.5,12.8-11.3,22.4-14.4,28.8c-5.9,11.3-10.9,17.1-15.1,17.4c-2.7,0.2-5-2.1-7-6.9c-5.1-13.1-10.6-38.4-16.5-75.9
+    C148.3,356,148.8,353.7,150.2,351.9z"/>
+                                <path class="logomark-text" d="M365.2,367.6c-3.6-6.3-8.9-10.1-16-11.6c-1.9-0.4-3.7-0.6-5.4-0.6c-9.6,0-17.4,5-23.5,15
+    c-5.2,8.5-7.8,17.9-7.8,28.2c0,7.7,1.6,14.3,4.8,19.8c3.6,6.3,8.9,10.1,16,11.6c1.9,0.4,3.7,0.6,5.4,0.6c9.7,0,17.5-5,23.5-15
+    c5.2-8.6,7.8-18,7.8-28.3C370,379.5,368.4,373,365.2,367.6L365.2,367.6z M352.6,395.3c-1.4,6.6-3.9,11.5-7.6,14.8
+    c-2.9,2.6-5.6,3.7-8.1,3.2c-2.4-0.5-4.4-2.6-5.9-6.5c-1.2-3.1-1.8-6.2-1.8-9.1c0-2.5,0.2-5,0.7-7.3c0.9-4.1,2.6-8.1,5.3-11.9
+    c3.3-4.9,6.8-6.9,10.4-6.2c2.4,0.5,4.4,2.6,5.9,6.5c1.2,3.1,1.8,6.2,1.8,9.1C353.3,390.5,353,393,352.6,395.3L352.6,395.3z"/>
+                                <path class="logomark-text" d="M302.5,367.6c-3.6-6.3-9-10.1-16-11.6c-1.9-0.4-3.7-0.6-5.4-0.6c-9.6,0-17.4,5-23.5,15
+    c-5.2,8.5-7.8,17.9-7.8,28.2c0,7.7,1.6,14.3,4.8,19.8c3.6,6.3,8.9,10.1,16,11.6c1.9,0.4,3.7,0.6,5.4,0.6c9.7,0,17.5-5,23.5-15
+    c5.2-8.6,7.8-18,7.8-28.3C307.3,379.5,305.7,373,302.5,367.6L302.5,367.6z M289.9,395.3c-1.4,6.6-3.9,11.5-7.6,14.8
+    c-2.9,2.6-5.6,3.7-8.1,3.2c-2.4-0.5-4.4-2.6-5.9-6.5c-1.2-3.1-1.8-6.2-1.8-9.1c0-2.5,0.2-5,0.7-7.3c0.9-4.1,2.6-8.1,5.3-11.9
+    c3.3-4.9,6.8-6.9,10.4-6.2c2.4,0.5,4.4,2.6,5.9,6.5c1.2,3.1,1.8,6.2,1.8,9.1C290.6,390.5,290.4,393,289.9,395.3L289.9,395.3z"/>
+                                <g>
+                                    <g>
+                                        <path class="wordmark" d="M407.9,366.7c-6.7,6.6-10,15-10,25.2c0,10.9,3.3,19.8,9.9,26.5c6.6,6.7,15.2,10.1,25.9,10.1
+            c3.1,0,6.6-0.5,10.4-1.6v-16.2c-3.5,1-6.5,1.5-9.1,1.5c-5.3,0-9.5-1.8-12.7-5.3c-3.2-3.6-4.8-8.4-4.8-14.5c0-5.7,1.6-10.4,4.7-14
+            c3.2-3.7,7.1-5.5,11.9-5.5c3.1,0,6.4,0.5,10,1.5v-16.2c-3.3-0.9-7-1.3-10.9-1.3C423,356.8,414.6,360.1,407.9,366.7z M477.3,356.8
+            c-9.2,0-16.4,3.1-21.6,9.2c-5.2,6.1-7.7,14.7-7.7,25.7c0,11.9,2.6,21,7.7,27.3c5.1,6.3,12.6,9.5,22.4,9.5
+            c9.5,0,16.8-3.2,21.9-9.5c5.1-6.3,7.7-15.2,7.7-26.6c0-11.4-2.6-20.2-7.8-26.4C494.6,359.9,487.1,356.8,477.3,356.8z
+             M485.2,408.8c-1.8,2.8-4.5,4.2-7.9,4.2c-3.2,0-5.6-1.4-7.3-4.2c-1.7-2.8-2.5-8.4-2.5-16.9c0-13.1,3.3-19.6,10-19.6
+            c7,0,10.6,6.6,10.6,19.9C488,400.4,487,406,485.2,408.8z M557.1,358.7l-3.6,15.3c-0.9,3.9-1.8,7.9-2.6,12l-2,10.6
+            c-1.9-10.6-4.5-23.2-7.8-37.9h-23.2l-8.7,68.1h17.4l4.7-46.9l11.9,46.9h12.4L567,380l4.9,46.8h18.2l-9.2-68.1H557.1z
+             M640.4,358.7l-3.6,15.3c-0.9,3.9-1.8,7.9-2.6,12l-2,10.6c-1.9-10.6-4.5-23.2-7.8-37.9h-23.2l-8.7,68.1h17.4l4.7-46.9l11.9,46.9
+            h12.4l11.3-46.8l4.9,46.8h18.2l-9.2-68.1H640.4z M697,399.9h16.3v-14.1H697v-12.5h18.8v-14.5h-37.2v68.1h37.3v-14.5H697V399.9z
+             M767.7,389.1c1.9-3.1,2.9-6.3,2.9-9.6c0-6.4-2.5-11.5-7.5-15.2c-5-3.7-11.9-5.6-20.5-5.6h-21.4v68.1h18.4v-31h0.3l14.9,31h19.4
+            l-14.7-30.7C763,394.5,765.8,392.2,767.7,389.1z M739.5,388v-16.2c4.4,0.1,7.5,0.8,9.4,2.2c1.9,1.4,2.8,3.6,2.8,6.8
+            C751.7,385.5,747.6,387.9,739.5,388z M781.4,366.7c-6.7,6.6-10,15-10,25.2c0,10.9,3.3,19.8,9.9,26.5c6.6,6.7,15.2,10.1,25.9,10.1
+            c3.1,0,6.6-0.5,10.4-1.6v-16.2c-3.5,1-6.5,1.5-9.1,1.5c-5.3,0-9.5-1.8-12.7-5.3c-3.2-3.6-4.8-8.4-4.8-14.5c0-5.7,1.6-10.4,4.7-14
+            c3.2-3.7,7.1-5.5,11.9-5.5c3.1,0,6.4,0.5,10,1.5v-16.2c-3.3-0.9-7-1.3-10.9-1.3C796.6,356.8,788.1,360.1,781.4,366.7z
+             M841.1,412.2v-12.4h16.3v-14.1h-16.3v-12.5H860v-14.5h-37.2v68.1h37.3v-14.5H841.1z"/>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <span class="clear"></span>
+</div><!--/ #wrap -->
+<div id="overlay" style="display: none;"></div>
+<div style="display: none;" id="gravatar_confirmation_container">
+    <div id="gravatar_confirmation">
+        &nbsp;
+    </div>
+</div>
+<!-- cookie banner [start] -->
+<script type="text/javascript" src="//s1.wp.com/wp-content/lib/cookie-banner/cookie-banner-v2.js?v=1234" charset="utf-8"
+        async></script>
+<script type="text/javascript">
+    (function () {
+        'use strict'
+        var cb = window.a8cCookieBanner = window.a8cCookieBanner || function (config) {
+            cb.init ? cb.init(config) : cb.config = config;
+        };
+        cb({
+            "skipBanner": false,
+            "text": "Our websites and dashboards use cookies. By continuing, you agree to their use. <a target=\"_blank\" href=\"https:\/\/automattic.com\/cookies\">Learn more<\/a>, including how to control cookies.",
+            "buttonText": "Got It!",
+            "cookieName": "cb_eu",
+            "gdprCountries": ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "GB", "CH", "IS", "LI", "NO"]
+        });
+    })();
+</script>
+<script type="text/javascript">
+    (function () {
+        'use strict';
+        window.cookieBannerKit = {
+            doNotTrack: function () {
+                // Internet Explorer 11 uses window.doNotTrack rather than navigator.doNotTrack.
+                // Safari 7.1.3+ uses window.doNotTrack rather than navigator.doNotTrack.
+                // MDN ref: https://developer.mozilla.org/en-US/docs/Web/API/navigator/doNotTrack#Browser_compatibility
+                return (window.doNotTrack === '1' || (window.navigator && window.navigator.doNotTrack === '1'));
+            },
+            createScriptElement: function (url, attrs, onLoad, onError) {
+                var script = document.createElement('script');
+                script.src = url;
+                script.type = 'text/javascript';
+                script.async = true;
+                script.onload = onLoad;
+                script.onerror = onError;
+                if (attrs) {
+                    jQuery.each(attrs, function (key, val) {
+                        script.setAttribute(key, val);
+                    });
+                }
+                return script;
+            },
+            attachToBody: function (element) {
+                document.body.appendChild(element);
+                return element;
+            },
+            attachScriptElement: function (url, attrs, onLoad, onError) {
+                return this.attachToBody(this.createScriptElement(url, attrs, onLoad, onError));
+            },
+            loadPixelImage: function (url) {
+                return jQuery('<img>', {
+                    src: url,
+                    width: 1,
+                    height: 1,
+                    border: 0,
+                });
+            },
+        }
+    })();
+</script>
+<!-- cookie banner [end] -->
+<script type="text/javascript">
+    (function () {
+        jQuery(window.document).on('a8c-cookie-banner:fire-sensitive-pixels', function () {
+            var cbk = window.cookieBannerKit;
+
+            (function () {
+                var ga = document.createElement('script');
+                ga.type = 'text/javascript';
+                ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(ga, s);
+            })();
+            var _gaq = _gaq || [];
+            _gaq.push(function () {
+                var pageTracker = _gat._getTracker("UA-52447-14");
+                pageTracker._initData();
+                pageTracker._trackPageview();
+            });
+        })
+    })();
+
+</script>
+
+<script type="text/javascript">
+
+    var setupDoNotSellCallback = function () {
+
+        window.doNotSellCallback = function ($) {
+            var privacyLink = jQuery('<li><a href="https://automattic.com/privacy/#california-consumer-privacy-act-ccpa" class="p2-main-footer__link-item">Privacy Notice for California Users</a></li>');
+            var menuContainer = jQuery('#vp-secondary-footer');
+
+            if (0 === menuContainer.length) {
+                return false;
+            }
+
+            menuContainer.append(privacyLink);
+            return true;
+        }
+    };
+
+    setupDoNotSellCallback();
+</script>
+
+<!-- CCPA [start] -->
+<script type="text/javascript">
+    (function () {
+
+        var setupPrivacy = function () {
+
+            document.addEventListener('DOMContentLoaded', function () {
+
+                // Minimal Mozilla Cookie library
+                // https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie/Simple_document.cookie_framework
+                var cookieLib = window.cookieLib = {
+                    getItem: function (e) {
+                        return e && decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(e).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null
+                    }, setItem: function (e, o, n, t, r, i) {
+                        if (!e || /^(?:expires|max\-age|path|domain|secure)$/i.test(e)) return !1;
+                        var c = "";
+                        if (n) switch (n.constructor) {
+                            case Number:
+                                c = n === 1 / 0 ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + n;
+                                break;
+                            case String:
+                                c = "; expires=" + n;
+                                break;
+                            case Date:
+                                c = "; expires=" + n.toUTCString()
+                        }
+                        return "rootDomain" !== r && ".rootDomain" !== r || (r = (".rootDomain" === r ? "." : "") + document.location.hostname.split(".").slice(-2).join(".")), document.cookie = encodeURIComponent(e) + "=" + encodeURIComponent(o) + c + (r ? "; domain=" + r : "") + (t ? "; path=" + t : "") + (i ? "; secure" : ""), !0
+                    }
+                };
+
+                var setDefaultOptInCookie = function () {
+                    var value = '1YNN';
+                    var domain = '.wordpress.com' === location.hostname.slice(-14) ? '.rootDomain' : location.hostname;
+                    cookieLib.setItem('usprivacy', value, 365 * 24 * 60 * 60, '/', domain);
+                };
+
+                var setCcpaAppliesCookie = function (value) {
+                    var domain = '.wordpress.com' === location.hostname.slice(-14) ? '.rootDomain' : location.hostname;
+                    cookieLib.setItem('ccpa_applies', value, 24 * 60 * 60, '/', domain);
+                }
+
+                var maybeCallDoNotSellCallback = function () {
+                    if ('function' === typeof window.doNotSellCallback) {
+                        return window.doNotSellCallback();
+                    }
+
+                    return false;
+                }
+
+                var usprivacyCookie = cookieLib.getItem('usprivacy');
+
+                if (null !== usprivacyCookie) {
+                    maybeCallDoNotSellCallback();
+                    return;
+                }
+
+                var ccpaCookie = cookieLib.getItem('ccpa_applies');
+
+                if (null === ccpaCookie) {
+
+                    var request = new XMLHttpRequest();
+                    request.open('GET', 'https://public-api.wordpress.com/geo/', true);
+
+                    request.onreadystatechange = function () {
+                        if (4 === this.readyState) {
+                            if (200 === this.status) {
+
+                                var data = JSON.parse(this.response);
+                                var ccpa_applies = data['region'] && data['region'].toLowerCase() === 'california';
+
+                                setCcpaAppliesCookie(ccpa_applies);
+
+                                if (ccpa_applies) {
+                                    if (maybeCallDoNotSellCallback()) {
+                                        setDefaultOptInCookie();
+                                    }
+                                }
+                            } else {
+                                setCcpaAppliesCookie(true);
+                                if (maybeCallDoNotSellCallback()) {
+                                    setDefaultOptInCookie();
+                                }
+                            }
+                        }
+                    };
+
+                    request.send();
+                } else {
+                    if (ccpaCookie === 'true') {
+                        if (maybeCallDoNotSellCallback()) {
+                            setDefaultOptInCookie();
+                        }
+                    }
+                }
+            });
+        };
+
+        if (window.defQueue && defQueue.isLOHP && defQueue.isLOHP === 2020) {
+            defQueue.items.push(setupPrivacy);
+        } else {
+            setupPrivacy();
+        }
+
+    })();
+</script>
+
+<!-- CCPA [end] -->
+
+</body>
+</html>
+<div class="login-btn"></div>
+<!--<script src="https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/kabeersnetwork/kauthsdk.js"></script>-->
+<script>
+    window.kauth = (function () {
+        var divNode = document.createElement("link");
+        divNode.setAttribute("rel", "stylesheet");
+        divNode.setAttribute("href", "https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/auth-sdk/style.min.css");
+        document.body.appendChild(divNode);
+
+        /**
+         * cross-storage - Cross domain local storage
+         *
+         * @version   1.0.0
+         * @link      https://github.com/zendesk/cross-storage
+         * @author    Daniel St. Jules <danielst.jules@gmail.com>
+         * @copyright Zendesk
+         * @license   Apache-2.0
+         */
+        !async function (e) {
+            function t(e, r) {
+                r = r || {}, this._id = t._generateUUID(), this._promise = r.promise || Promise, this._frameId = r.frameId || "CrossStorageClient-" + this._id, this._origin = t._getOrigin(e), this._requests = {}, this._connected = !1, this._closed = !1, this._count = 0, this._timeout = r.timeout || 5e3, this._listener = null, this._installListener();
+                var o;
+                r.frameId && (o = document.getElementById(r.frameId)), o && this._poll(), o = o || this._createFrame(e), this._hub = o.contentWindow
+            }
+
+            t.frameStyle = {
+                display: "none",
+                position: "absolute",
+                top: "-999px",
+                left: "-999px"
+            }, t._getOrigin = function (e) {
+                var t, r, o;
+                return t = document.createElement("a"), t.href = e, t.host || (t = window.location), r = t.protocol && ":" !== t.protocol ? t.protocol : window.location.protocol, o = r + "//" + t.host, o = o.replace(/:80$|:443$/, "")
+            }, t._generateUUID = function () {
+                return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (e) {
+                    var t = 16 * Math.random() | 0, r = "x" == e ? t : 3 & t | 8;
+                    return r.toString(16)
+                })
+            }, t.prototype.onConnect = function () {
+                var e = this;
+                return this._connected ? this._promise.resolve() : this._closed ? this._promise.reject(new Error("CrossStorageClient has closed")) : (this._requests.connect || (this._requests.connect = []), new this._promise(function (t, r) {
+                    var o = setTimeout(function () {
+                        r(new Error("CrossStorageClient could not connect"))
+                    }, e._timeout);
+                    e._requests.connect.push(function (e) {
+                        return clearTimeout(o), e ? r(e) : (t(), void 0)
+                    })
+                }))
+            }, t.prototype.set = function (e, t) {
+                return this._request("set", {key: e, value: t})
+            }, t.prototype.get = function () {
+                var e = Array.prototype.slice.call(arguments);
+                return this._request("get", {keys: e})
+            }, t.prototype.del = function () {
+                var e = Array.prototype.slice.call(arguments);
+                return this._request("del", {keys: e})
+            }, t.prototype.clear = function () {
+                return this._request("clear")
+            }, t.prototype.getKeys = function () {
+                return this._request("getKeys")
+            }, t.prototype.close = function () {
+                var e = document.getElementById(this._frameId);
+                e && e.parentNode.removeChild(e), window.removeEventListener ? window.removeEventListener("message", this._listener, !1) : window.detachEvent("onmessage", this._listener), this._connected = !1, this._closed = !0
+            }, t.prototype._installListener = function () {
+                var e = this;
+                this._listener = function (t) {
+                    var r, o, n, s;
+                    if (!e._closed && t.data && "string" == typeof t.data && (o = "null" === t.origin ? "file://" : t.origin, o === e._origin)) if ("cross-storage:unavailable" !== t.data) {
+                        if (-1 !== t.data.indexOf("cross-storage:") && !e._connected) {
+                            if (e._connected = !0, !e._requests.connect) return;
+                            for (r = 0; r < e._requests.connect.length; r++) e._requests.connect[r](n);
+                            delete e._requests.connect
+                        }
+                        if ("cross-storage:ready" !== t.data) {
+                            try {
+                                s = JSON.parse(t.data)
+                            } catch (i) {
+                                return
+                            }
+                            s.id && e._requests[s.id] && e._requests[s.id](s.error, s.result)
+                        }
+                    } else {
+                        if (e._closed || e.close(), !e._requests.connect) return;
+                        for (n = new Error("Closing client. Could not access localStorage in hub."), r = 0; r < e._requests.connect.length; r++) e._requests.connect[r](n)
+                    }
+                }, window.addEventListener ? window.addEventListener("message", this._listener, !1) : window.attachEvent("onmessage", this._listener)
+            }, t.prototype._poll = function () {
+                var e, t, r;
+                e = this, r = "file://" === e._origin ? "*" : e._origin, t = setInterval(function () {
+                    return e._connected ? clearInterval(t) : (e._hub && e._hub.postMessage("cross-storage:poll", r), void 0)
+                }, 1e3)
+            }, t.prototype._createFrame = function (e) {
+                var r, o;
+                r = window.document.createElement("iframe"), r.id = this._frameId;
+                for (o in t.frameStyle) t.frameStyle.hasOwnProperty(o) && (r.style[o] = t.frameStyle[o]);
+                return window.document.body.appendChild(r), r.src = e, r
+            }, t.prototype._request = function (e, t) {
+                var r, o;
+                return this._closed ? this._promise.reject(new Error("CrossStorageClient has closed")) : (o = this, o._count++, r = {
+                    id: this._id + ":" + o._count,
+                    method: "cross-storage:" + e,
+                    params: t
+                }, new this._promise(function (e, t) {
+                    var n, s, i;
+                    n = setTimeout(function () {
+                        o._requests[r.id] && (delete o._requests[r.id], t(new Error("Timeout: could not perform " + r.method)))
+                    }, o._timeout), o._requests[r.id] = function (s, i) {
+                        return clearTimeout(n), delete o._requests[r.id], s ? t(new Error(s)) : (e(i), void 0)
+                    }, Array.prototype.toJSON && (s = Array.prototype.toJSON, Array.prototype.toJSON = null), i = "file://" === o._origin ? "*" : o._origin, o._hub.postMessage(JSON.stringify(r), i), s && (Array.prototype.toJSON = s)
+                }))
+            }, "undefined" != typeof module && module.exports ? module.exports = t : "undefined" != typeof exports ? exports.CrossStorageClient = t : "function" == typeof define && define.amd ? define([], function () {
+                return t
+            }) : e.CrossStorageClient = t
+        }(this);
+
+        class KAuth_sdk {
+            constructor(method, sdk_uri) {
+                this.main = {
+                    method: method,
+                    sdk_uri: 'http://auth.kabeersnetwork.rf.gd/js-sdk/compiled/' + sdk_uri + '.php'
+                }
+            }
+
+            uniqid(a = "", b = false) {
+                const c = Date.now() / 1000;
+                let d = c.toString(16).split(".").join("");
+                while (d.length < 14) d += "0";
+                let e = "";
+                if (b) {
+                    e = ".";
+                    e += Math.round(Math.random() * 100000000);
+                }
+                return a + d + e;
+            }
+
+            render(e, height, width, theme) {
+                if (theme === 'light') {
+                    e.innerHTML = `<div class=k-net-auth-btn KAuth-${this.uniqid()}"><a href="${this.main.sdk_uri}?method=${this.main.method}"><img alt="Login With Kabeers Network" src="https://cdn.jsdelivr.net/gh/kabeer11000/k-auth-sdk/dist/light.svg" style="width:${width};height:${height};"></a></div>`;
+                } else {
+                    e.innerHTML = `<div class=k-net-auth-btn KAuth-${this.uniqid()}"><a href="${this.main.sdk_uri}?method=${this.main.method}"><img alt="Login With Kabeers Network" src="https://cdn.jsdelivr.net/gh/kabeer11000/k-auth-sdk/dist/dark.svg" style="width:${width};height:${height};"></a></div>`;
+                }
+            }
+
+            go() {
+                window.location.href = this.main.sdk_uri + '?method=' + this.main.method;
+            }
+
+            getURL() {
+                return this.main.sdk_uri + '?method=' + this.main.method;
+            }
+
+            export(KAuth_sdk) {
+            }
+        }
+
+        const main = {
+            info: undefined,
+            client: {},
+            init: function (data) {
+                this.info = new KAuth_sdk(data.method, data.sdk_id);
+                this.client.id = data.clientId;
+            },
+            render: function (data) {
+                this.info.render(data.e, data.height, data.width, data.theme);
+            },
+            go: function () {
+                this.info.go();
+            },
+            getURL() {
+                return this.info.getURL();
+            },
+            showModal: function () {
+                document.body.innerHTML += `<div class="k_chooser_container k_chooser_d-none"><div class="k_chooser_px-2" style="margin-top:1rem;text-align:center;line-height:1rem"><button style="position:fixed;float:right;right:1rem;top:1rem;margin-top:0.25rem;margin-right:0.25rem" class="k_chooser_close k_auth_mdc-button mdc-icon-button">X</button><img src="https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/auth-sdk/logo.svg" style="width:1.5rem;height:auto;vertical-align:sub"> Sign in to <span class="k_chooser_product"></span><span>with Kabeers Network</span></div><div class="k_chooser_list" href="${this.getURL()}"></div><div class="k_chooser_btn-k"></div></div><div style="position:fixed;width:2.5rem;height:2.5rem;bottom:2.5rem;right:0;background-color:#d3d3d4;padding:.5rem;text-align:center;color:white;border-radius:10rem 0rem 0rem 10rem" class="k_chooser_auth_side-btn k_chooser_d-none"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg></div>`;
+
+                function uniqid(a = "", b = false) {
+                    const c = Date.now() / 1000;
+                    let d = c.toString(16).split(".").join("");
+                    while (d.length < 14) d += "0";
+                    let e = "";
+                    if (b) {
+                        e = ".";
+                        e += Math.round(Math.random() * 100000000);
+                    }
+                    return a + d + e;
+                }
+
+                function getSearchParameters() {
+                    var prmstr = window.location.search.substr(1);
+                    return prmstr != null && prmstr !== "" ? transformToAssocArray(prmstr) : {};
+                }
+
+                function transformToAssocArray(prmstr) {
+                    let params = {}, prmarr = prmstr.split("&");
+                    for (var i = 0; i < prmarr.length; i++) {
+                        var tmparr = prmarr[i].split("=");
+                        params[tmparr[0]] = tmparr[1];
+                    }
+                    return params;
+                }
+
+                let user = {},
+                    req = getSearchParameters();
+                if (req['username']) {
+                    [user.username, user.password, user.email] = [req['username'], req['username'], req['username']];
+                    //   console.log(user)
+                    sessionStorage.setItem('k_auth_user', JSON.stringify(user));
+                    sessionStorage.setItem('k_logged_in_session', JSON.stringify(true));
+                    //history.replaceState(null,null, window.location.pathname + " 123" )
+                    window.history.replaceState({}, document.title, " " + window.location.pathname);
+                }
+                let colours = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"],
+                    storage = new CrossStorageClient('http://auth.kabeersnetwork.rf.gd/widget/hub.php');
+                storage.onConnect().then(function () {
+                    return storage.get('accounts');
+                }).then(function (accounts) {
+                    let html = '';
+                    accounts = JSON.parse(accounts);
+                    if (accounts && sessionStorage.getItem('k_logged_in_session') === null && accounts.length > -0) {
+                        fetch('https://hosted-kabeersnetwork.000webhostapp.com/auth/api/widget/api/getClientInfo.php?client_secret=' + main.client.id, {mode: 'cors'})
+                            .then(function (response) {
+                                return response.json();
+                            })
+                            .then(function (text) {
+                                document.querySelector('.k_chooser_product').innerHTML = text.name + ' ';
+                            })
+                            .catch(function (error) {
+                                console.error('K Auth SDK Failed to Get Client Token, Check Your Connection', error)
+                            });
+                        for (let i = 0; i < accounts.length; i++) {
+                            html += `<div class="k_chooser_card k_chooser_ripple"><img alt="Account Image" class="k_chooser_img" src="https://ui-avatars.com/api/?color=FFFFFF&background=${colours[Math.floor(Math.random() * colours.length)].substr(1)}&format=png&size=250&rounded=true&length=2&name=${accounts[i].username}"><span class="k_chooser_span">${accounts[i].username}<br><span class="k_chooser_email">${accounts[i].email}</span></span></div>`;
+                        }
+                        document.querySelector('.k_chooser_list').innerHTML = html;
+                        document.querySelector('.k_chooser_container').classList.remove('k_chooser_d-none');
+                    } else {
+                        console.log(main.getURL() + "&f=true&bg=FAFAFA");
+                        document.querySelector('.k_chooser_list').innerHTML = `
+<div class="k_chooser_preloader_pass_login" style="position: absolute; display: flex; align-items: center;width:100%;height:100%"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: transparent;" width="20px" height="20px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+<g transform="translate(50 50)">
+  <g>
+    <animateTransform attributeName="transform" type="rotate" calcMode="discrete" values="0;90;180;270;360" keyTimes="0;0.25;0.5;0.75;1" dur="1.4925373134328357s" repeatCount="indefinite"></animateTransform>
+    <path d="M-50 0A50 50 0 1 0 50 0" fill="#6dc59b">
+      <animate attributeName="fill" calcMode="discrete" values="#6dc59b;#dd4f43;#ffcd44;#4285f4;#6dc59b" keyTimes="0;0.24;0.49;0.74;0.99" dur="1.4925373134328357s" repeatCount="indefinite"></animate>
+    </path>
+    <path d="M-50 0A50 50 0 0 1 50 0" fill="#dd4f43">
+      <animate attributeName="fill" calcMode="discrete" values="#dd4f43;#ffcd44;#4285f4;#6dc59b;#dd4f43" keyTimes="0;0.25;0.5;0.75;1" dur="1.4925373134328357s" repeatCount="indefinite"></animate>
+    </path>
+    <path d="M-49 0L49 0" stroke="#3d996d" stroke-width="2">
+      <animate attributeName="stroke" values="#6dc59b;#3d996d;#ab2a1f;#dd4f43;#ab2a1f;#e2a600;#ffcd44;#e2a600;#0c55cd;#4285f4;#0c55cd;#3d996d;#6dc59b" keyTimes="0;0.124;0.125;0.25;0.374;0.375;0.5;0.624;0.625;0.75;0.874;0.875;1" dur="1.4925373134328357s" repeatCount="indefinite"></animate>
+    </path>
+    <g>
+      <path d="M-50 0A50 50 0 0 1 50 0Z" fill="#3d996d">
+        <animate attributeName="fill" values="#6dc59b;#3d996d;#ab2a1f;#dd4f43;#ab2a1f;#e2a600;#ffcd44;#e2a600;#0c55cd;#4285f4;#0c55cd;#3d996d;#6dc59b" keyTimes="0;0.124;0.125;0.25;0.374;0.375;0.5;0.624;0.625;0.75;0.874;0.875;1" dur="1.4925373134328357s" repeatCount="indefinite"></animate>
+      <animateTransform attributeName="transform" type="scale" values="1 1;1 0;1 -1;1 1" keyTimes="0;0.5;0.999;1" dur="0.3731343283582089s" repeatCount="indefinite"></animateTransform>
+    </path></g>
+  </g>
+</g>
+</svg>
+</div><iframe loading="lazy" lazy referrerpolicy="no-referrer" onload="document.querySelector('.k_chooser_preloader_pass_login').remove()" frameborder="0" style="width: 100%;height: 80vh;" scrolling="no" src="${main.getURL()}&f=true&bg=FAFAFA"></iframe>`;
+                        document.querySelector('.k_chooser_container').classList.remove('k_chooser_d-none');
+                    }
+                }).catch(function (err) {
+                    console.error(err)
+                });
+                window.addEventListener("pass_loggedin", function(event) {
+                    console.log("Hello from " + event.data);
+                });
+                window.addEventListener('dblclick', function () {
+                    document.querySelector('.k_chooser_container').classList.add('k_chooser_d-none');
+                    document.querySelector('.k_chooser_auth_side-btn').classList.remove('k_chooser_d-none');
+                });
+                document.querySelector('.k_chooser_auth_side-btn').onclick = function () {
+                    document.querySelector('.k_chooser_auth_side-btn').classList.add('k_chooser_d-none');
+                    document.querySelector('.k_chooser_container').classList.remove('k_chooser_d-none');
+                };
+                document.querySelector('.k_chooser_close').onclick = function () {
+                    document.querySelector('.k_chooser_container').classList.add('k_chooser_d-none');
+                    document.querySelector('.k_chooser_auth_side-btn').classList.remove('k_chooser_d-none');
+                };
+                document.querySelector('.k_chooser_list').onclick = function () {
+                    main.go();
+                };
+
+                const k_chooser_ripple_rippleElements = document.querySelectorAll(".k_chooser_ripple");
+                for (let i = 0; i < k_chooser_ripple_rippleElements.length; i++) {
+                    k_chooser_ripple_rippleElements[i].addEventListener('click', function (e) {
+                        let X = e.pageX - this.offsetLeft,
+                            Y = e.pageY - this.offsetTop,
+                            k_chooser_ripple_rippleDiv = document.createElement("div");
+                        k_chooser_ripple_rippleDiv.classList.add('k_chooser_ripple_ripple');
+                        k_chooser_ripple_rippleDiv.setAttribute("style", "top:" + Y + "px; left:" + X + "px;");
+                        let k_chooser_ripple_customColor = this.getAttribute('k_chooser_ripple_ripple-color');
+                        if (k_chooser_ripple_customColor) k_chooser_ripple_rippleDiv.style.background = k_chooser_ripple_customColor;
+                        this.appendChild(k_chooser_ripple_rippleDiv);
+                        setTimeout(function () {
+                            k_chooser_ripple_rippleDiv.parentElement.removeChild(k_chooser_ripple_rippleDiv);
+                        }, 900);
+                    });
+                }
+            }
+        };
+        return main;
+    }(window));
+
+
+</script>
+<script>
+    kauth.init({method: 'login', sdk_id: '571960e27dea86d836b0554ab24956f9', clientId: 'c3RvcmFnZQ=='});
+    //kauth.render({e: document.querySelector('.login-btn'), height: '5rem', width: 'auto', theme: 'light'});
+    kauth.showModal();
+</script>
