@@ -1,0 +1,72 @@
+HTTrack3.49-2+htsswf+htsjava launched on Sat, 15 May 2021 10:52:30 at https://about.google/ https://about.google/products/ https://about.google/commitments/ https://about.google/commitments/reports/ https://about.google/stories/ +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar
+(winhttrack -qwC2%Ps2u1%s%uN0%I0p3DaK0H0%kf2A25000%f#f -F "Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)" -%F "<!-- Mirrored from %s%s by HTTrack Website Copier/3.x [XR&CO'2014], %s -->" -%l "en, *" https://about.google/ https://about.google/products/ https://about.google/commitments/ https://about.google/commitments/reports/ https://about.google/stories/ -O1 "D:\hosted-kabeersnetwork\KabeersNetwork-About.google\About.Google" +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+10:54:42	Error: 	"Bad Request" (400) at link www.googletagmanager.com/gtm.js?id= (from https://about.google/)
+10:54:42	Error: 	"Not Found" (404) at link https://about.google/{[::feed.image]} (from https://about.google/)
+10:54:42	Error: 	"Not Found" (404) at link https://about.google/assets/img/social-{[::feed.icon]}-color.svg (from https://about.google/)
+10:59:49	Error: 	"Not Found" (404) at link https://about.google/assets/img/logo/color.png (from https://about.google/assets/css/main.min.css?cache=a5d8544)
+10:59:49	Error: 	"Not Found" (404) at link https://about.google/assets/img/logo/flat.png (from https://about.google/assets/css/main.min.css?cache=a5d8544)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/locations/assets/fonts/GoogleSansMono-Regular.otf (from https://about.google/locations/assets/css/main.min.css?cache=13183bd)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/img/locations/img/directions-icon_2x.png (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/rainforest/images/arrow-down.svg (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/rainforest/images/icon-muted.svg (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/rainforest/images/icon-unmuted.svg (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/rainforest/images/icon-unmuted-grey.svg (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/rainforest/images/icon-muted-grey.svg (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/congo/svg/scroll.svg (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/robinmaxkii/svg/scroll.svg (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/crisis-response/shadow.png (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/crisis-response/svg/scroll.svg (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legacy/stories/dnyan/svg/route-background.svg (from https://about.google/assets-legacy/css/main.min.css?cache=ddb389e)
+11:02:19	Error: 	"Not Found" (404) at link https://about.google/assets-legal/fonts/GoogleSansMono-Regular.otf (from https://about.google/assets-legal/css/main.min.css?cache=a624f73)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/rainforest/images/arrow-down.svg (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/rainforest/images/icon-muted.svg (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/rainforest/images/icon-unmuted.svg (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/rainforest/images/icon-unmuted-grey.svg (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/rainforest/images/icon-muted-grey.svg (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/congo/svg/scroll.svg (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/robinmaxkii/svg/scroll.svg (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/crisis-response/shadow.png (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/crisis-response/svg/scroll.svg (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:20	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2020/stories/dnyan/svg/route-background.svg (from https://about.google/assets-stories-2020/css/main.min.css?cache=42b8b56)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/fonts/GoogleSansMono-Regular.otf (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/rainforest/images/arrow-down.svg (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/rainforest/images/icon-muted.svg (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/rainforest/images/icon-unmuted.svg (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/rainforest/images/icon-unmuted-grey.svg (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/rainforest/images/icon-muted-grey.svg (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/congo/svg/scroll.svg (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/robinmaxkii/svg/scroll.svg (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/crisis-response/shadow.png (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/crisis-response/svg/scroll.svg (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:21	Error: 	"Not Found" (404) at link https://about.google/assets-stories-2019/stories/dnyan/svg/route-background.svg (from https://about.google/assets-stories-2019/css/main.min.css?cache=75a5b6a)
+11:02:29	Warning: 	Found for https://about.google/all-stories/?topic=small-business
+11:02:29	Warning: 	File has moved from https://about.google/all-stories/?topic=small-business to https://about.google/stories/all-stories/
+11:02:29	Warning: 	Found for https://about.google/all-stories/?topic=entrepreneurs
+11:02:29	Warning: 	File has moved from https://about.google/all-stories/?topic=entrepreneurs to https://about.google/stories/all-stories/
+11:02:29	Warning: 	Found for https://about.google/all-stories/?topic=maps
+11:02:29	Warning: 	File has moved from https://about.google/all-stories/?topic=maps to https://about.google/stories/all-stories/
+11:02:30	Warning: 	Found for https://about.google/all-stories/?topic=europe&label=Europe&category=location
+11:02:30	Warning: 	File has moved from https://about.google/all-stories/?topic=europe&label=Europe&category=location to https://about.google/stories/all-stories/
+11:02:30	Warning: 	Found for https://about.google/all-stories/?topic=opportunity
+11:02:30	Warning: 	File has moved from https://about.google/all-stories/?topic=opportunity to https://about.google/stories/all-stories/
+11:02:30	Warning: 	Found for https://about.google/all-stories/?topic=culture
+11:02:30	Warning: 	File has moved from https://about.google/all-stories/?topic=culture to https://about.google/stories/all-stories/
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/rainforest/images/arrow-down.svg (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/rainforest/images/icon-muted.svg (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/rainforest/images/icon-unmuted.svg (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/rainforest/images/icon-unmuted-grey.svg (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/rainforest/images/icon-muted-grey.svg (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/congo/svg/scroll.svg (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/robinmaxkii/svg/scroll.svg (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/crisis-response/shadow.png (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/crisis-response/svg/scroll.svg (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+11:02:30	Error: 	"Not Found" (404) at link https://about.google/assets-stories-emea/stories/dnyan/svg/route-background.svg (from https://about.google/assets-stories-emea/css/main.min.css?cache=6fa1d4c)
+
+HTTrack Website Copier/3.49-2 mirror complete in 10 minutes 0 seconds : 341 links scanned, 285 files written (39458098 bytes overall) [19784428 bytes received at 32974 bytes/sec], 23688124 bytes transferred using HTTP compression in 194 files, ratio 14%
+(49 errors, 12 warnings, 0 messages)
