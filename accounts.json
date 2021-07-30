@@ -1,0 +1,74 @@
+[
+    {
+        "signed_in": true,
+        "username": "pornstarpakwan",
+        "name": "pornstar pakwan",
+        "account_image": "https://avatars2.githubusercontent.com/u/52799968?s=40&v=4",
+        "user_id": "SD6YoQaxbvSMrXkHuXWQM9kjgcJuYN4aCQNbc8jA",
+        "email": "pornstarpakwan@gmail.com",
+        "verified": true,
+        "allowed_apps": [
+            {
+                "id": "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD",
+                "perms": {
+                    "openid": true,
+                    "s564d68a34dCn9OuUNTZRfuaCnwc6:getSong": true,
+                    "s564d68a34dCn9OuUNTZRfuaCnwc6:search": true,
+                    "s564d68a34dCn9OuUNTZRfuaCnwc6:feed": true,
+                    "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite": true
+                }
+            },
+            {
+                "id": "SS5s687df676k98d96ds9DWxsS8f0d9m791354",
+                "perms": {
+                    "openid": true
+                }
+            },
+            {
+                "id": "HlgpBwchUuns80ak3kYaEP8IOiDWxRXS840lnnmD",
+                "perms": {
+                    "auth_platform:settings.readwrite": true,
+                    "auth_platform:oauth_apps.readwrite": true,
+                    "openid": true
+                }
+            }
+        ],
+        "session_token": "eb0e3eb8-bbe1-45fe-b567-dc298b4c0e09"
+    },
+    {
+        "signed_in": true,
+        "username": "kabeer11000",
+        "name": "Kabeer Jaffri",
+        "account_image": "https://avatars2.githubusercontent.com/u/52799968?s=40&v=4",
+        "user_id": "____TEST____USER___ID",
+        "email": "kabeer11000@gmail.com",
+        "verified": true,
+        "allowed_apps": [
+            {
+                "id": "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD",
+                "perms": {
+                    "openid": true,
+                    "s564d68a34dCn9OuUNTZRfuaCnwc6:getSong": true,
+                    "s564d68a34dCn9OuUNTZRfuaCnwc6:search": true,
+                    "s564d68a34dCn9OuUNTZRfuaCnwc6:feed": true,
+                    "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite": true
+                }
+            },
+            {
+                "id": "SS5s687df676k98d96ds9DWxsS8f0d9m791354",
+                "perms": {
+                    "openid": true
+                }
+            },
+            {
+                "id": "HlgpBwchUuns80ak3kYaEP8IOiDWxRXS840lnnmD",
+                "perms": {
+                    "auth_platform:settings.readwrite": true,
+                    "auth_platform:oauth_apps.readwrite": true,
+                    "openid": true
+                }
+            }
+        ],
+        "session_token": "____TEST____SESSION____TOKEN"
+    }
+]
