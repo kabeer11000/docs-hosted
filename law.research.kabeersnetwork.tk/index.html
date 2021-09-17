@@ -1,5 +1,6 @@
 <content></content>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sindresorhus/github-markdown-css@main/github-markdown.css"></link>
   <script type="module">
     document.querySelector("content").innerHTML = marked(await (await fetch("./blog/legal/fingerprinting/copyright.md")).text());
   </script>
