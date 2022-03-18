@@ -4,6 +4,7 @@
   <script defer type="module">
     const url = "../user-implemented-aftermarket-anc-algorithms.md";
     document.querySelector("content").innerHTML = marked.parse(await (await fetch(url)).text());
+    window.parent.postMessage("renderComplete", "*");
   </script>
 <style>
   .markdown-body .octicon {
