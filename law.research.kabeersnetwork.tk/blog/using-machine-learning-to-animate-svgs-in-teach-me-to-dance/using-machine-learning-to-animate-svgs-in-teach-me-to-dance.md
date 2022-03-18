@@ -1,5 +1,5 @@
 
-Teach Me To Dance- An open source tool to bring SVG characters to life in the browser via motion capture
+## Teach Me To Dance- An open source tool to bring SVG characters to life in the browser via motion capture
 
 May 27, 2020
 
