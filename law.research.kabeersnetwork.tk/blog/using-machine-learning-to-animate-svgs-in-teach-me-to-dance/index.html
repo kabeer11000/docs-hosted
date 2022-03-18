@@ -4,7 +4,6 @@
   <script defer type="module">
     const url = "./using-machine-learning-to-animate-svgs-in-teach-me-to-dance.md";
     document.querySelector("content").innerHTML = marked.parse(await (await fetch(url)).text());
-    window.parent.postMessage("renderComplete", "*");
   </script>
 <style>
   .markdown-body .octicon {
