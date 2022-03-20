@@ -16,7 +16,7 @@ body, html{
 #splash {
     overflow: hidden;
     background-color: #425565;
-    background: url(../img/bg.jpg);
+    background: url(./img/bg.jpg);
     background-size: cover;
     background-position: center;
 }
@@ -244,7 +244,7 @@ body, html{
     text-align: right;
     padding: 0 20px;
     background-color: #425565;
-    background: url(../img/bg.jpg);
+    background: url(./img/bg.jpg);
     background-size: cover;
     background-position: bottom;
 }
