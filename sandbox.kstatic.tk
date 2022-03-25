@@ -1,0 +1,5 @@
+<_h></_h>
+<script>
+const _ = new URLSearchParams(window.location.search);
+document.querySelector("_h").innerHTML = decodeURIComponent(url_.get("h"))
+</script>
