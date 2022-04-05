@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <title>Ballistic JavaScript Simulator</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script type="application/javascript">
+    var canvas;
+    var ctx;
+    var restartFlag = true;
+    var text_vel,text_angle,text_drag;
+    var slider_vel,slider_angle,slider_drag;
+    var x_axis,y_axis;
+    function PlotAxis () {
+      this.type = PlotAxis.LINEAR;
+      this.orientation = PlotAxis.HORIZONTAL;
+      this.set = function(min,max) {
+        var range,decade,i;
+
+        if (this.type == PlotAxis.LINEAR) {
+          range = max - min;
+          decade = Math.floor(Math.log10(range));
+          this.unit = Math.pow(10.0,decade);
+          this.start = this.unit * Math.floor(min / this.unit);
+          this.end = this.unit * Math.ceil(max / this.unit);
+          this.nlabels = 1 + Math.floor((this.end - this.start) / this.unit + 0.5);
+          if (this.nlabels < 4) {
+            this.unit *= 0.25;
+            this.start = this.unit * Math.floor(min / this.unit);
+            this.end = this.unit * Math.ceil(max / this.unit);
+            this.nlabels = 1 + Math.floor((this.end - this.start) / this.unit + 0.5);
+          }
+          else if (this.nlabels < 6) {
+            this.unit *= 0.5;
+            this.start = this.unit * Math.floor(min / this.unit);
+            this.end = this.unit * Math.ceil(max / this.unit);
+            this.nlabels = 1 + Math.floor((this.end - this.start) / this.unit + 0.5);
+          }
+          this.ntics = 4 * (this.nlabels-1);
+          this.label = new Array(this.nlabels);
+          this.tic = new Array(this.ntics);
+          this.label[0] = this.start;
+          if (Math.abs(this.label[0]) < range * 1.0e-3) this.label[0] = 0.0;
+          this.tic[0] = this.start + 0.2 * this.unit;
+          this.tic[1] = this.start + 0.4 * this.unit;
+          this.tic[2] = this.start + 0.6 * this.unit;
+          this.tic[3] = this.start + 0.8 * this.unit;
+          i = 1;
+          while (i < this.nlabels - 1) {
+            this.label[i] = this.label[i-1] + this.unit;
+            if (Math.abs(this.label[i]) < range * 1.0e-3) this.label[i] = 0.0;
+            this.tic[4 * i] = this.label[i] + 0.2 * this.unit;
+            this.tic[4 * i + 1] = this.label[i] + 0.4 * this.unit;
+            this.tic[4 * i + 2] = this.label[i] + 0.6 * this.unit;
+            this.tic[4 * i + 3] = this.label[i] + 0.8 * this.unit;
+            i++;
+          }
+          this.label[this.nlabels - 1] = this.end;
+          if (Math.abs(this.label[this.nlabels - 1]) < range * 1.0e-3) this.label[this.nlabels - 1] = 0.0;
+        }
+        else if (this.type == PlotAxis.LOGARITHMIC) {
+          this.end = Math.ceil(Math.log10(max * 0.999999));
+          if (min < max * 1.0e-6) this.start = this.end - 6.0;
+          else this.start = Math.floor(Math.log10(min * 1.000001));
+          range = this.end - this.start;
+          this.nlabels = (int) (this.end - this.start + 1.5);
+          this.ntics = 4 * (this.nlabels-1);
+          this.label = new Array(this.nlabels);
+          this.tic = new Array(this.ntics);
+          this.label[0] = this.start;
+          this.tic[0] = this.start + 0.30103;
+          this.tic[1] = this.start + 0.60206;
+          this.tic[2] = this.start + 0.77815125;
+          this.tic[3] = this.start + 0.90309;
+          i = 1;
+          while (i < this.nlabels - 1) {
+            this.label[i] = this.label[i-1] + 1.0;
+            if (Math.abs(this.label[i]) < range * 1.0e-3) this.label[i] = 0.0;
+            this.tic[4 * i] = this.label[i] + 0.30103;
+            this.tic[4 * i + 1] = this.label[i] + 0.60206;
+            this.tic[4 * i + 2] = this.label[i] + 0.77815125;
+            this.tic[4 * i + 3] = this.label[i] + 0.90309;
+            i++;
+          }
+          this.label[this.nlabels - 1] = this.end;
+          if (Math.abs(this.label[this.nlabels - 1]) < range * 1.0e-3) this.label[this.nlabels - 1] = 0.0;
+        }
+        if (this.orientation == PlotAxis.HORIZONTAL) this.scale = (canvas.width - (PlotAxis.XLMARGIN + PlotAxis.XRMARGIN)) / (this.end - this.start);
+        else this.scale = (canvas.height - (PlotAxis.YBMARGIN + PlotAxis.YTMARGIN)) / (this.end - this.start);
+      }
+      this.draw = function() {
+        var i,xp,yp;
+        ctx.strokeStyle="#000000";
+        ctx.fillStyle="#000000";
+        ctx.font = '12px sanserif';
+        if (this.orientation == PlotAxis.HORIZONTAL) {
+          ctx.beginPath();
+          ctx.moveTo(PlotAxis.XLMARGIN,canvas.height-PlotAxis.YBMARGIN);
+          ctx.lineTo(canvas.width-PlotAxis.XRMARGIN,canvas.height-PlotAxis.YBMARGIN);
+          i = 0;
+          while (i < this.nlabels) {  // draw axis label tics
+            xp =  PlotAxis.XLMARGIN + (this.label[i] - this.label[0]) * this.scale;
+            ctx.moveTo(xp,canvas.height - PlotAxis.YBMARGIN + 10);
+            ctx.lineTo(xp,canvas.height - PlotAxis.YBMARGIN);
+            i++;
+          }
+          i = 0;
+          while (i < this.ntics) {  // draw axis tics
+            xp = PlotAxis.XLMARGIN + (this.tic[i] - this.label[0]) * this.scale;
+            ctx.moveTo(xp,canvas.height - PlotAxis.YBMARGIN + 5);
+            ctx.lineTo(xp,canvas.height - PlotAxis.YBMARGIN);
+            i++;
+          }
+          ctx.stroke();
+          ctx.textAlign = "center";
+          i = 0;
+          while (i < this.nlabels) {
+            xp =  PlotAxis.XLMARGIN + (this.label[i] - this.label[0]) * this.scale;
+            ctx.fillText(this.label[i],xp,canvas.height - 4);
+            i++;
+          }
+        }
+        else if (this.orientation == PlotAxis.LEFT_VERTICAL) {
+          ctx.beginPath();
+          ctx.moveTo(PlotAxis.XLMARGIN,canvas.height-PlotAxis.YBMARGIN);
+          ctx.lineTo(PlotAxis.XLMARGIN,PlotAxis.YTMARGIN);
+          i = 0;
+          while (i < this.nlabels) {  // draw axis label tics
+            yp =  PlotAxis.YTMARGIN + (this.label[this.nlabels-1] - this.label[i]) * this.scale;
+            ctx.moveTo(PlotAxis.XLMARGIN - 10,yp);
+            ctx.lineTo(PlotAxis.XLMARGIN,yp);
+            i++;
+          }
+          i = 0;
+          while (i < this.ntics) {  // draw axis tics
+            yp = PlotAxis.YTMARGIN + (this.label[this.nlabels-1] - this.tic[i]) * this.scale;
+            ctx.moveTo(PlotAxis.XLMARGIN - 5,yp);
+            ctx.lineTo(PlotAxis.XLMARGIN,yp);
+            i++;
+          }
+          ctx.stroke();
+          ctx.textAlign = "right";
+          i = 0;
+          while (i < this.nlabels) {
+            yp =  PlotAxis.YTMARGIN + (this.label[this.nlabels-1] - this.label[i]) * this.scale;
+            ctx.fillText(this.label[i],PlotAxis.XLMARGIN - 10,yp + 5);
+            i++;
+          }
+        }
+        else {
+          ctx.beginPath();
+          ctx.moveTo(canvas.width-PlotAxis.XRMARGIN,canvas.height-PlotAxis.YBMARGIN);
+          ctx.lineTo(canvas.width-PlotAxis.XRMARGIN,PlotAxis.YTMARGIN);
+          i = 0;
+          while (i < this.nlabels) {  // draw axis label tics
+            yp =  PlotAxis.YTMARGIN + (this.label[this.nlabels-1] - this.label[i]) * this.scale;
+            ctx.moveTo(canvas.width - PlotAxis.XRMARGIN + 10,yp);
+            ctx.lineTo(canvas.width - PlotAxis.XRMARGIN,yp);
+            i++;
+          }
+          i = 0;
+          while (i < this.ntics) {  // draw axis tics
+            yp = PlotAxis.YTMARGIN + (this.label[this.nlabels-1] - this.tic[i]) * this.scale;
+            ctx.moveTo(canvas.width - PlotAxis.XRMARGIN + 5,yp);
+            ctx.lineTo(canvas.width - PlotAxis.XRMARGIN,yp);
+            i++;
+          }
+          ctx.stroke();
+          ctx.textAlign = "left";
+          i = 0;
+          while (i < this.nlabels) {
+            yp =  PlotAxis.YTMARGIN + (this.label[this.nlabels-1] - this.label[i]) * this.scale;
+            ctx.fillText(this.label[i],canvas.width - PlotAxis.XRMARGIN + 10,yp + 5);
+            i++;
+          }
+        }
+      }
+    }
+    PlotAxis.LINEAR = 0;
+    PlotAxis.LOGARITHMIC = 1;
+    PlotAxis.HORIZONTAL = 0;
+    PlotAxis.LEFT_VERTICAL = 1;
+    PlotAxis.RIGHT_VERTICAL = 2;
+    PlotAxis.XLMARGIN = 50;
+    PlotAxis.XRMARGIN = 20;
+    PlotAxis.YBMARGIN = 30;
+    PlotAxis.YTMARGIN = 20;
+    function Ballistic() {
+      this.state = [0.0,0.0,0.0,0.0];
+      this.ymid = new Array(4);
+      this.k1 = new Array(4);
+      this.k2 = new Array(4);
+      this.k3 = new Array(4);
+      this.k4 = new Array(4);
+      this.mass = 1;
+      this.vel = 100;
+      this.angle = 45;
+      this.drag = 1.0e-6;
+      this.t = 0.0;
+      this.t_inc = 0.1;
+      this.vectorField = function(x,y,yp) {
+        var v;
+        v = Math.sqrt(y[2]*y[2] + y[3]*y[3]);
+        yp[0] = y[2];
+        yp[1] = y[3];
+        yp[2] = -this.drag * v * y[2] / this.mass;
+        yp[3] = -this.drag * v * y[3] / this.mass - 9.80665;
+      }
+      this.rk4 = function() {
+        var j;
+        var t_halfinc;
+
+        t_halfinc = this.t_inc * 0.5;
+        this.vectorField(this.t,this.state,this.k1);   //calculate RK4 algorithm step
+        for (j = 0; j < 4; j++) this.ymid[j] = this.state[j] + (t_halfinc * this.k1[j]);
+        this.vectorField(this.t + t_halfinc,this.ymid,this.k2);
+        for (j = 0; j < 4; j++) this.ymid[j] = this.state[j] + (t_halfinc * this.k2[j]);
+        this.vectorField(this.t + t_halfinc,this.ymid,this.k3);
+        for (j = 0; j < 4; j++) this.ymid[j] = this.state[j] + (this.t_inc * this.k3[j]);
+        this.vectorField(this.t + this.t_inc,this.ymid,this.k4);
+        for (j = 0; j < 4; j++) this.state[j] += this.t_inc * (this.k1[j] + (2.0 * this.k2[j]) + (2.0 * this.k3[j]) + this.k4[j]) / 6.0;
+        this.t += this.t_inc;
+      }
+    }
+    function init() {
+      canvas = document.getElementById('canvas');
+      ctx = canvas.getContext('2d');
+      ctx.lineWidth = 2;
+      ctx.strokeRect(1,1,canvas.width-2,canvas.height-2);
+      x_axis = new PlotAxis();
+      x_axis.type = PlotAxis.LINEAR;
+      x_axis.orientation = PlotAxis.HORIZONTAL;
+      x_axis.set(0,1200);
+      y_axis = new PlotAxis();
+      y_axis.type = PlotAxis.LINEAR;
+      y_axis.orientation = PlotAxis.LEFT_VERTICAL;
+      y_axis.set(0,1000);
+      text_vel = document.getElementById('text_vel');
+      text_angle = document.getElementById('text_angle');
+      text_drag = document.getElementById('text_drag');
+      slider_vel = document.getElementById('slider_vel');
+      slider_angle = document.getElementById('slider_angle');
+      slider_drag = document.getElementById('slider_drag');
+      ballistic = new Ballistic();
+      restartFlag = true;
+      window.requestAnimationFrame(next);
+    }
+    function next() {
+      var xp,yp;
+      if (restartFlag) {
+        ctx.strokeStyle="#000000";
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.lineWidth = 2;
+        ctx.strokeRect(1,1,canvas.width-2,canvas.height-2);
+        x_axis.draw();
+        y_axis.draw();
+
+        ballistic.t = 0.0;
+        ballistic.state[0] = 0;
+        ballistic.state[1] = 0;
+        ballistic.state[2] = ballistic.vel * Math.cos(ballistic.angle * 0.01745329251994329);
+        ballistic.state[3] = ballistic.vel * Math.sin(ballistic.angle * 0.01745329251994329);
+
+        ctx.strokeStyle="#FF0000";
+        ctx.lineWidth = 1;
+        restartFlag = false;
+      }
+      ballistic.rk4();
+      if (ballistic.state[1] >= 0.0) {
+        ctx.fillStyle="#FF0000";  // draw red dot at cannon ball point
+        xp = PlotAxis.XLMARGIN + (ballistic.state[0] - x_axis.start) * x_axis.scale;
+        yp = PlotAxis.YTMARGIN + (y_axis.end - ballistic.state[1]) * y_axis.scale;
+        ctx.beginPath();
+        ctx.arc(xp,yp,4,0,Math.PI * 2,true);
+        ctx.fill();
+      }
+      window.requestAnimationFrame(next);
+    }
+    function change_vel() {
+      ballistic.vel = parseFloat(slider_vel.value);
+      text_vel.innerHTML = ballistic.vel.toFixed(1);
+      restartFlag = true;
+    }
+    function change_angle() {
+      ballistic.angle = parseFloat(slider_angle.value);
+      text_angle.innerHTML = ballistic.angle.toFixed(1);
+      restartFlag = true;
+    }
+    function change_drag() {
+      ballistic.drag = parseFloat(slider_drag.value);
+      ballistic.drag = Math.pow(10,ballistic.drag);
+      text_drag.innerHTML = ballistic.drag.toExponential(4);
+      restartFlag = true;
+    }
+    function restart() {
+      restartFlag = true;
+    }
+  </script>
+  </head>
+  <body background="white-mist.jpg" onload="init()">
+    <h2 align="center">Ballistic JavaScript Simulator</h2>
+    <table align="center">
+      <tr>
+        <td>Launch velocity:</td>
+        <td><span id="text_vel">100.0</span></td>
+        <td><input type="range" style="width: 400px;" min="0" max="200" step="1" value="100" class="slider" id="slider_vel" oninput="change_vel()"></td>
+      </tr>
+      <tr>
+        <td>Launch angle:</td>
+        <td><span id="text_angle">45.0</span></td>
+        <td><input type="range" style="width: 400px;" min="0" max="90" step="0.1" value="45" class="slider" id="slider_angle" oninput="change_angle()"></td>
+      </tr>
+      <tr>
+        <td>Drag coefficient &alpha;:</td>
+        <td><span id="text_drag">1.0000e-6</span></td>
+        <td><input type="range" style="width: 400px;" min="-6" max="-2" step="0.01" value="-6" class="slider" id="slider_drag" oninput="change_drag()"></td>
+      </tr>
+    </table>
+    <p align="center">
+    <input type="button" value="Launch" onclick="restart()">&nbsp;
+    </p>
+    <p align="center"><canvas id="canvas" width="800" height="620"></canvas></p>
+<h2>Physics Background</h2>
+<p>One of the first applications of scientific digital computing technology was predicting ballistic
+trajectories during World War II. A simplied version of the physical system is shown here.
+A projectile is launched with an initial velocity <i>v&#8407;</i><sub>0</sub> and angle &theta;
+relative to horizontal, and is
+subjected to gravitational and drag forces as it flies through the air to its landing point.</p>
+<center><img src="ballistic_fig1.png"></center>
+<p>In the absence of air drag, the trajectory is a solution of a trivial differential equation
+accounting for only the uniform downward gravitational field and follows a parabolic path. However,
+with some realistic models for the drag forces at high velocities, the differential equation
+becomes significantly nonlinear, and must be solved with numerical methods.</p>
+<p>A simple model for the drag force vector <i>F&#8407;</i><sub>d</sub> on an object with
+velocity <i>v&#8407;</i> through a fluid is usually expressed as</p>
+<center><img src="ballistic_eqn1.png" height="120"></center>
+<p>where <i>C</i><sub>d</sub> is the so-called &quot;drag coefficient&quot;, &mu;
+is the fluid density, and <i>A</i> is the cross sectional area of the object. For the purposes
+of this interactive simulator we can bundle all the constants in this relation together as
+one coefficient &alpha; as shown. This expression above will generate an approximate air drag force
+with a magnitude dependent on the square of the projectile velocity and with a vector
+direction opposite to the instantaneous velocity.</p>
+<p>With the initial velocity vector <i>v&#8407;</i> established by the launch, the projectile
+position vector <i>r&#8407;</i> will be the solution of the second order differential equation</p>
+<center><img src="ballistic_eqn2.png" height="80"></center>
+<p>The vectors <i>r&#8407;</i> , <i>v&#8407;</i> , and <i>g&#8407;</i> may be decomposed into two
+components in the x and y directions, giving a system of two scalar differential equations</p>
+<center><img src="ballistic_eqn3.png" height="80"></center>
+<p>This system is now in a form that can be solved numerically to simulate the time dependence
+of the position and trace the projectile's trajectory.</p>
+<h2>The Ballistic Simulator</h2>
+<p>The interative simulator at the top of this page will solve this time dependence and plot the
+trajectory determined by the parameters of initial launch speed, launch angle, and drag
+coefficient &alpha; input on the sliders. The projectile's position is plotted at each of the
+discrete time steps used in the numerical solution. The default very small value for
+&alpha; = 10<sup>-6</sup> will give a solution very close
+to a simple parabolic path, but by adding in some significant drag, with &alpha; = 10<sup>-3</sup>
+for example, you can see a distortion from the ideal parabolic path and a loss of range
+that must be compensated for by increased launch velocity.</p>
+<hr>
+  </body>
+</html>
