@@ -1,0 +1,5 @@
+<kn_output/>
+<script>
+  const p = new URLSearchParams(window.location.search);
+  document.querySelector("kn_output").innerTEXT = atob(decodeURIComponent(p.get("u")))
+</script>
