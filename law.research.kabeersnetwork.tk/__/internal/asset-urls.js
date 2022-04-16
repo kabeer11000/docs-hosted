@@ -2,12 +2,12 @@ window["__kn.website.static.research.blog:renderer.assetURLS"] = [{
     type: "link",
     attach: "head",
     position: "bottom",
-    optionalProps: {href: "/__/internal/blog.markdown.css"}
+    optionalProps: {href: "/__/internal/blog.markdown.css", type: "stylesheet"}
 }, {
     type: "link",
     attach: "head",
     position: "bottom",
-    optionalProps: {href: "https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"}
+    optionalProps: {href: "https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css", type: "stylesheet"}
 }, {
     type: "script",
     attach: "body",
