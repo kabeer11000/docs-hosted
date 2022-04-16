@@ -2,12 +2,17 @@ window["__kn.website.static.research.blog:renderer.assetURLS"] = [{
     type: "link",
     attach: "head",
     position: "bottom",
-    optionalProps: {href: "/__/internal/blog.markdown.css", type: "stylesheet"}
+    optionalProps: {href: "/__/internal/blog.markdown.css", rel: "stylesheet"}
 }, {
     type: "link",
     attach: "head",
     position: "bottom",
-    optionalProps: {href: "https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css", type: "stylesheet"}
+    optionalProps: {href: "https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css", rel: "stylesheet"}
+}, {
+    type: "html",
+    attach: "head",
+    position: "top",
+    optionalProps: {href: "/__/internal/head.html"}
 }, {
     type: "script",
     attach: "body",
