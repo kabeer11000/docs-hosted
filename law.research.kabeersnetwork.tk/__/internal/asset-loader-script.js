@@ -6,7 +6,7 @@
     const setAttributes = (el, attrs) => Object.keys(attrs).forEach(key => el.setAttribute(key, attrs[key]));
 
     for (const asset of assets) {
-        const isHTML = asset.type !== "html" ? asset.type
+        const isHTML = asset.type !== "html";
         const element = document.createElement(isHTML ? asset.type : "div");
         setAttributes(element, asset.optionalProps || {});
         if (isHTML) {
