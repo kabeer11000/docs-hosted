@@ -17,7 +17,7 @@ window["__kn.website.static.research.blog:renderer.assetURLS"] = [{
     type: "script",
     attach: "body",
     position: "bottom",
-    optionalProps: {src: "./__/internal/globals.js"}
+    optionalProps: {src: "/__/internal/globals.js"}
 }, {
     type: "script",
     attach: "body",
@@ -27,5 +27,5 @@ window["__kn.website.static.research.blog:renderer.assetURLS"] = [{
     type: "script",
     attach: "body",
     position: "bottom",
-    optionalProps: {defer: true, src: "./__/internal/renderer-script.js"}
+    optionalProps: {type: "module", defer: true, src: "/__/internal/renderer-script.js"}
 }]
