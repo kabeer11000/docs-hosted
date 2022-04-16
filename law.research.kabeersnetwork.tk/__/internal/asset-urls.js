@@ -12,7 +12,8 @@ window["__kn.website.static.research.blog:renderer.assetURLS"] = [{
     type: "html",
     attach: "head",
     position: "top",
-    source: "/__/internal/head.html"
+    source: "/__/internal/head.html",
+    optionalProps: {},
 }, {
     type: "script",
     attach: "body",
