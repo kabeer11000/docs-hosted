@@ -6,8 +6,18 @@
     const setAttributes = (el, attrs) => Object.keys(attrs).forEach(key => el.setAttribute(key, attrs[key]));
 
     for (const asset of assets) {
-        const element = document.createElement(asset.type);
+        const isHTML = asset.type !== "html" ? asset.type
+        const element = document.createElement(isHTML ? asset.type : "div");
         setAttributes(element, asset.optionalProps || {});
+        if (isHTML) {
+            const script = document.createElement("script")
+            script.setAttribute("type", "module");
+            const jsFileId = Math.random();
+            const containerId = Math.random();
+            script.setAttribute("id", jsFileId);
+            script.setAttribute("src", "/__/internal/html-asset-loader.js?file=" + asset.source + "&id=" + jsFileId + "&containerId=" + containerId);
+            document.body.append(script);
+        } 
         document[asset.attach === "head" ? "head" : "body"][asset.position === "top" ? "prepend" : "append"](element);
     }
 })();
