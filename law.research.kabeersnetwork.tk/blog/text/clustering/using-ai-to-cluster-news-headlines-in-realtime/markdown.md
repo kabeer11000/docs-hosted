@@ -3,6 +3,9 @@
 # Using Machine Learning to cluster news headlines
 Kabeer's Network Research Labs - Based on research published by Nova Southeastern University (NSUWorks)
 converted to text format using an online 
+
+IMAGES AND ALL OTHER ASSETS ARE UNDER [THIS](https://github.com/kabeer11000/docs-hosted/tree/redirector-content/law.research.kabeersnetwork.tk/blog/text/clustering/using-ai-to-cluster-news-headlines-in-realtime/) REPOSITORY
+
 ## Abstract
 
 With over 0.25 billion web pages hosted in the World Wide Web, it is virtually impossible
