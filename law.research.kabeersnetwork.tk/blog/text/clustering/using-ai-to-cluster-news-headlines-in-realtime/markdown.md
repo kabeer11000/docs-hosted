@@ -1,80 +1,64 @@
-﻿**Nova Southeastern University ![](Aspose.Words.6cf8b7c4-c8f4-4a11-ac67-1b959a46be2b.001.png)[NSUWorks**](https://nsuworks.nova.edu?utm_source=nsuworks.nova.edu%2Fgscis_etd%2F52&utm_medium=PDF&utm_campaign=PDFCoverPages)![](Aspose.Words.6cf8b7c4-c8f4-4a11-ac67-1b959a46be2b.002.png)**
+# Using Machine Learning to cluster news headlines
+Kabeer's Network Research Labs - Based on research published by Nova Southeastern University (NSUWorks)
+converted to text format using an online 
 
-[CEC Theses and Dissertations](https://nsuworks.nova.edu/gscis_etd?utm_source=nsuworks.nova.edu%2Fgscis_etd%2F52&utm_medium=PDF&utm_campaign=PDFCoverPages) [College of Engineering and Computing ](https://nsuworks.nova.edu/cec?utm_source=nsuworks.nova.edu%2Fgscis_etd%2F52&utm_medium=PDF&utm_campaign=PDFCoverPages)![](Aspose.Words.6cf8b7c4-c8f4-4a11-ac67-1b959a46be2b.003.png)2015
 
-News Feeds Clustering Research Study
-
-Haytham Abuel-Futuh
-
-*Nova Southeastern University*,haytham@afutuh.com
-
-This document is a product of extensive research conducted at the Nova Southeastern University[College of Engineering and Computing](http://cec.nova.edu/index.html). For more information on research and degree programs at the NSU College of Engineering and Computing, please click[here](http://cec.nova.edu/index.html).
-
-Follow this and additional works at:[https://n suworks.nova.edu/gscis_etd ](https://nsuworks.nova.edu/gscis_etd?utm_source=nsuworks.nova.edu%2Fgscis_etd%2F52&utm_medium=PDF&utm_campaign=PDFCoverPages)![](Aspose.Words.6cf8b7c4-c8f4-4a11-ac67-1b959a46be2b.004.png)Part of the[Computer Sciences Commons](http://network.bepress.com/hgg/discipline/142?utm_source=nsuworks.nova.edu%2Fgscis_etd%2F52&utm_medium=PDF&utm_campaign=PDFCoverPages)
-
-[Share Feedback About This Item](http://nsuworks.nova.edu/user_survey.html)![](Aspose.Words.6cf8b7c4-c8f4-4a11-ac67-1b959a46be2b.005.png)
-
-NSUWorks Citation
-
-Haytham Abuel-Futuh. 2015.*News Feeds Clustering Research Study.*Master's thesis. Nova Southeastern University. Retrieved from NSUWorks, Graduate School of Computer and Information Sciences. (52)
-
-https://n suworks.nova.edu/gscis\_etd/52.
-
-This Thesis is brought to you by the College of Engineering and Computing at NSUWorks. It has been accepted for inclusion in CEC Theses and Dissertations by an authorized administrator of NSUWorks. For more information, please contact<nsuworks@nova.edu>.
-
-News Feeds Clustering Research Study 
-
-By Haytham AbuelFutuh Supervised by 
-
-Dr. Peixiang Liu 
-
-A thesis submitted in partial fulfillment of the requirements for the degree of Masters of 
-
-Science in Computer Information Systems 
-
-Graduate School of Computer and Information Sciences Nova Southeastern University 
-
-2015 
-
-**Thesis Of ![](Aspose.Words.6cf8b7c4-c8f4-4a11-ac67-1b959a46be2b.006.png)**
-
-**Haytham Abuel-Futuh** 
-
-Submitted in partial Fulfillment of the Requirements for the Degree of 
-
-**M. S. in Computer Science** 
-
-**News Feeds Clustering Research Study** 
-
-Nova Southeastern University 
-
-Graduate School of Computer and Information Sciences 
-
-April 2015 
-
-**Thesis Approved By:   \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_** 
-
-`       `Peixiang Liu, Ph.D.   
-
-**Thesis Abstract** 
+## Abstract
 
 With over 0.25 billion web pages hosted in the World Wide Web, it is virtually impossible to navigate through the Internet. Many applications try to help users achieve this task. For example, search engines build indexes to make the entire World Wide Web searchable, and news curators allow users to browse topics of interest on different structured sites. One problem that arises for these applications and others with similar goals is identifying documents with similar contents. This helps the applications show users documents with unique contents as well as group various similar documents under similar topics. There has been a lot of effort into algorithms that can achieve that task. Prior research include Yang, Pierce & Carbonell (1998) research where they looked at the problem of identifying news events exploiting chronology order, Nallapati, et al (2004) research who built a dependency model for news events and Shah & Elbahesh (2004) research where they used Jaccard coefficient to generate a flat list of topics.  This research will identify training and testing datasets, and it will train and evaluate (Pera & Ng) algorithm. The chosen algorithm is a hierarchical clustering algorithm that incorporates many of the ideas researched earlier. In evaluation phase, error will be measured in the ratio of miss-categorized documents to the total number of documents. The research will show error can be as low as 0.03 with a model built on a single node processing 1000 random distinct documents. In evaluation of the algorithm, the experiments will show that (Pera & Ng)’s fuzzy equivalence algorithm does produce acceptable results when compared to Google News as a reference. The algorithm, however, requires a huge amount of memory to hold the trained model. This renders it not suitable to run on portable devices.  
 
-**Table of Contents** 
+## List of Tables
 
-Thesis Abstract............................................................................... **Error! Bookmark not defined.** List of Tables ................................................................................................................................. iii List of Figures ................................................................................................................................ iv Chapter 1 Introduction .................................................................................................................... 1 Problem statement ........................................................................................................................ 1 Significance of the research ......................................................................................................... 3 Terms and definitions .................................................................................................................. 4 Chapter 2 Literature review ............................................................................................................ 5 Existing techniques ...................................................................................................................... 5 Yang, Pierce, & Carbonell (1998) research ............................................................................ 7 Nallapati, et al (2004) research .............................................................................................. 10 Shah & ElBahesh  (2004) ...................................................................................................... 14 Li, et al (2007) ....................................................................................................................... 16 Chapter 3 Methodology ................................................................................................................ 18 Algorithms ................................................................................................................................. 18 Algorithm summary .............................................................................................................. 19 Algorithm details ................................................................................................................... 21 Requirements and specifications ................................................................................................ 24 Chapter 4 Results .......................................................................................................................... 25 Experiment 1 Devising algorithm for determining pThresh and vThresh ................................. 25 How error is calculated .......................................................................................................... 27 Results and conclusion .......................................................................................................... 28 Experiment 2 Building the model .............................................................................................. 28 Results and conclusion .......................................................................................................... 30 Discussions ................................................................................................................................ 31 Observations .......................................................................................................................... 31 Limitations of the algorithms used ........................................................................................ 32 Chapter 5 Conclusions, Implications, and Recommendations ...................................................... 33 Conclusions ................................................................................................................................ 33 Implications................................................................................................................................ 33 Recommendations ...................................................................................................................... 34 Appendix I. Bibliography ........................................................................................................... 36
 
-**List of Tables** 
+**iv**^
 
-Table 1 Summary of results for the hierarchal content-based clustering algorithm proposed by Yang, Pierce, & Carbonell (1998) .................................................................................................. 8 Table 2 Table comparing GAC and INCR results for retrospective news stories clustering. ...... 10 Table 3 Statistics of annotated data .............................................................................................. 12 Table 4 Testing results for various models ................................................................................... 13 Table 5 Summarized results of clustering 1500 articles (n=10, k=1) ........................................... 16 Table 6 Summarizes results for RCS algorithm ........................................................................... 17 Table 7 Topics picked for testing dataset ..................................................................................... 29
+- Chapter 1 Introduction List of Figures iv
+   - Problem statement
+   - Significance of the research
+   - Terms and definitions
+- Chapter 2 Literature review
+   - Existing techniques
+      - Yang, Pierce, & Carbonell (1998) research
+      - Nallapati, et al (2004) research
+      - Shah & ElBahesh (2004)
+      - Li, et al (2007)
+- Chapter 3 Methodology
+   - Algorithms
+      - Algorithm summary
+      - Algorithm details
+   - Requirements and specifications
+- Chapter 4 Results
+   - Experiment 1 Devising algorithm for determining pThresh and vThresh
+      - How error is calculated
+      - Results and conclusion
+   - Experiment 2 Building the model
+      - Results and conclusion
+   - Discussions
+      - Observations
+      - Limitations of the algorithms used
+- Chapter 5 Conclusions, Implications, and Recommendations
+   - Conclusions
+   - Implications................................................................................................................................
+   - Recommendations
+- Appendix I. Bibliography
+- Yang, Pierce, & Carbonell (1998) Table 1 Summary of results for the hierarchal content-based clustering algorithm proposed by
+- Table 2 Table comparing GAC and INCR results for retrospective news stories clustering.
+- Table 3 Statistics of annotated data
+- Table 4 Testing results for various models
+- Table 5 Summarized results of clustering 1500 articles (n=10, k=1)
+- Table 6 Summarizes results for RCS algorithm
+- Table 7 Topics picked for testing dataset
+- Figure 1 Sample hierarchical clusters List of Figures
+- Figure 2 Training Algorithm.
+- Figure 3 Runtime Algorithm
+- Figure 4 Pseudo-Code for training algorithm
+- Figure 5 Pseudo-Code for Error Evaluation Algorithm
+- Figure 6 Average error for each pThresh/vThresh value in range 0-1 for input of size
+- documents.
+- Figure 7 Average error for each pThresh/vThresh value in range 0-1 for input of size
+- documents.
+- Figure 8 MapRedue architecture for training algorithm
 
-**List of Figures** 
-
-Figure 1 Sample hierarchical clusters ............................................................................................. 6 Figure 2 Training Algorithm. ........................................................................................................ 18 Figure 3 Runtime Algorithm ......................................................................................................... 20 Figure 4 Pseudo-Code for training algorithm ............................................................................... 25 Figure 5 Pseudo-Code for Error Evaluation Algorithm ................................................................ 26 Figure 6 Average error for each pThresh/vThresh value in range 0-1 for input of size 66 documents. .................................................................................................................................... 27 Figure 7 Average error for each pThresh/vThresh value in range 0-1 for input of size 1000 documents. .................................................................................................................................... 30 Figure 8 MapRedue architecture for training algorithm ............................................................... 34
-
-**iv**
-
-37 
 
 **Chapter 1 Introduction** 
 
