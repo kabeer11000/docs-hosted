@@ -2,7 +2,7 @@
 
 # Using Machine Learning to cluster news headlines
 Kabeer's Network Research Labs - Based on research published by Nova Southeastern University (NSUWorks)
-converted to text format using an online 
+converted to text format using an online converter
 
 IMAGES AND ALL OTHER ASSETS ARE UNDER [THIS](https://github.com/kabeer11000/docs-hosted/tree/redirector-content/law.research.kabeersnetwork.tk/blog/text/clustering/using-ai-to-cluster-news-headlines-in-realtime/) REPOSITORY
 
