@@ -17,7 +17,7 @@ The result is  [Pose Animator](https://pose-animator-demo.firebaseapp.com/camera
 
 The overall idea of Pose Animator is to take a 2D vector illustration and update its containing curves in real-time based on the recognition result from PoseNet and FaceMesh. To achieve this, Pose Animator borrows the idea of skeleton-based animation from computer graphics and applies it to vector characters.  
 
-![](https://3.bp.blogspot.com/-oQH2DgTJeEg/Xs12y_vKkgI/AAAAAAAADHw/-6jUtjgK6DAYUGvHQOGULIOKOJpDhiDLwCLcBGAsYHQ/s1600/movementgif.gif)
+![](https://docs.cloud.kabeers.network/c/v/644e5abf788e4---movementgif.gif)
 
 In skeletal animation a character is represented in two parts:  
 
