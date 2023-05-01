@@ -1,4 +1,4 @@
-<div id="BLOG_META_DATA" tags="Draft,Yebr" heading="Creating the Yebr Music Platform" excerpt="Yebr, is a free music streaming and search service which aims to promote free and open-source software services" cover-image="https://cdn.glitch.global/77b4c993-589e-4e39-8500-f03fc9765209/d06c87b2-9f55-47cf-baa5-fc03b642948b.image.png?v=1665946875169" type="fullscreenembed" style="visibility:hidden"></div>
+<div id="BLOG_META_DATA" tags="Draft | Yebr" heading="Creating the Yebr Music Platform" excerpt="Yebr, is a free music streaming and search service which aims to promote free and open-source software services" cover-image="https://cdn.glitch.global/77b4c993-589e-4e39-8500-f03fc9765209/d06c87b2-9f55-47cf-baa5-fc03b642948b.image.png?v=1665946875169" type="fullscreenembed" style="visibility:hidden"></div>
 
 Yebr, is a free music streaming and search service which aims to promote free and open-source software services, most of the music streaming industry was behind closed-sourced proprietary software, in an attempt to change that my team and I built Yebr.
 
