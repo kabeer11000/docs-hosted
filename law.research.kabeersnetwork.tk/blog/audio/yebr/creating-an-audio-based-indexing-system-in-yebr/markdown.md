@@ -1,4 +1,4 @@
-<div id="BLOG_META_DATA" tags="BETA" heading="[BETA] Creating a audio based indexing system in Yebr " excerpt="A complex mix of audio and ai that will help Yebr recognise tracks found anywhere on the web" cover-image="https://cdn.jsdelivr.net/gh/kabeer11000/docs-hosted@redirector-content/law.research.kabeersnetwork.tk/blog/audio/yebr/creating-an-audio-based-indexing-system-in-yebr/1_8HtK4oAeg8LiJH80IZqxZg.png" style="visibility:hidden"></div>
+<div id="BLOG_META_DATA" tags="BETA | audio-fingerprinting | audio analysis | indexing" heading="[BETA] Creating a audio based indexing system in Yebr " excerpt="A complex mix of audio and ai that will help Yebr recognise tracks found anywhere on the web" cover-image="https://cdn.jsdelivr.net/gh/kabeer11000/docs-hosted@redirector-content/law.research.kabeersnetwork.tk/blog/audio/yebr/creating-an-audio-based-indexing-system-in-yebr/1_8HtK4oAeg8LiJH80IZqxZg.png" style="visibility:hidden"></div>
 
 # Creating a audio based indexing system in Yebr 
 This Document is currently in early beta
