@@ -1,4 +1,4 @@
-<div id="BLOG_META_DATA" tags="BETA" heading="Neural Topic Modeling with Continual Lifelong Learning" excerpt="Lifelong learning has recently attracted attention
+<div id="BLOG_META_DATA" tags="topic-modeling | clustering | text-analysis" heading="Neural Topic Modeling with Continual Lifelong Learning" excerpt="Lifelong learning has recently attracted attention
 in building machine learning systems that continually accumulate and transfer knowledge to help
 future learning. Unsupervised topic modeling has been popularly used to discover topics from document collections" 
      type="fullscreenembed" cover-image="https://docs.cloud.kabeers.network/c/v/644ea3f253fce---Screen%20Shot%202023-04-30%20at%2010.22.13%20PM.png" style="visibility:hidden"></div>
