@@ -1,4 +1,4 @@
-<div id="BLOG_META_DATA" tags="BETA" heading="TF-IDF and how the BM25 search algorithim works " excerpt="Okapi BM25 is one of the strongest “simple”
+<div id="BLOG_META_DATA" tags="TF-IDF | BEAM25 algorithim | text-analysis" heading="TF-IDF and how the BM25 search algorithim works " excerpt="Okapi BM25 is one of the strongest “simple”
 scoring functions, and has proven a useful
 baseline for experiments and feature for
 ranking" type="fullscreenembed" cover-image="https://docs.cloud.kabeers.network/c/synced/627be4cee32ec---1_V8zEF3m21WkJ-UYzME6cKA.png" style="visibility:hidden"></div>
