@@ -1,5 +1,5 @@
 <div id="BLOG_META_DATA"
-     heading="Running powerful developer enviorments inside browser" 
+     heading="Running powerful developer environments inside a browser" 
      excerpt="Spinning up IDE's with a integrated runtime inside a browser window, a hybrid approch to a editor with MicroVMs and WASI based embedded operating system." 
      tags="Architecture Paper | Cloud IDE | Kabeer Cloud Platform"
      type="fullscreenembed"
