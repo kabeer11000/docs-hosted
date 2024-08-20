@@ -4,8 +4,22 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Muhammad Kabeer - Resume</title>
+    <title>Kabeer Jaffri - Resume</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description"
+        content="I’m a computer science bachelors student at IBA and a really passionate software developer with a focus on problem solving. I have more than 5 years of successful software and team experience making both full-stack web, and app development, with popular frameworks, technologies and databases. ">
+    <meta name="keywords" content="kabeer jaffri, resume, job, hire me">
+    <meta name="twitter:site" content="@MrPixelPirate">
+    <meta name="twitter:creator" content="@MrPixelPirate">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet" />
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    /> -->
     <style>
         body {
             font-family: "Roboto", sans-serif;
@@ -19,9 +33,10 @@
         .container {
             width: 80%;
             max-width: 900px;
+            height: 150vh;
             margin: 2rem auto;
             background: #fff;
-            padding: 2rem;
+            /* padding: 2rem; */
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -35,6 +50,8 @@
 
         h2 {
             font-weight: 300;
+            /* border-bottom: 2px solid #FAFAFA; */
+            /* padding-bottom: 0.5rem; */
         }
 
         .section {
@@ -73,18 +90,47 @@
         }
 
         .contact-info a:hover {
-            text-decoration: underline;
+            /* text-decoration: underline; */
         }
 
         @media (max-width: 600px) {
+            body {
+                background-color: white;
+            }
+
             .container {
-                width: 90%;
+                width: 100%;
+                height: 250vh;
                 box-shadow: none;
             }
+
+            /* .branding {
+                position: relative;
+                writing-mode: vertical-rl;
+                text-orientation: upright;
+                height: 100vh;
+                max-width: 2rem;
+            } */
         }
 
         hr {
             border-color: lightgray;
+        }
+
+        .rotating-img {
+            animation-duration: 20s;
+            animation-name: rotate;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .branding {
@@ -93,15 +139,6 @@
             position: fixed;
             bottom: 0;
             right: 0;
-            background-color: #000;
-            color: #fff;
-            padding: 10px;
-            font-family: "Roboto", sans-serif;
-        }
-
-        .branding a {
-            color: #f3bf6f;
-            text-decoration: none;
         }
     </style>
 </head>
@@ -112,65 +149,36 @@
         position: relative;
         overflow: hidden;
         z-index: 2;
-        padding-top: 5rem;
-        padding-bottom: 10rem;
+        padding-bottom: 0rem;
         margin-bottom: 2.5rem;
+        /* overflow-y: scroll; */
       ">
-            <h1>Muhammad Kabeer</h1>
-            <div class="contact-info">
-                <p>
-                    +92 (330) 329-5735 •
-                    <a href="mailto:kabeer@kabeers.network">kabeer@kabeers.network</a>
-                    •
-                    <a href="https://linkedin.com/in/kabeerjaffri" target="_blank">LinkedIn</a>
-                </p>
+            <img src="https://pixelos.net/Images/Shapes/Monetp-b.png" class="rotating-img" style="
+          position: absolute;
+          width: 10rem;
+          height: auto;
+          top: 0.5rem;
+          right: 1rem;
+          z-index: 1;
+        " />
+
+            <div
+                style="width: 50%; padding: 2rem 2rem 0 2rem; display: flex; justify-content: start">
+                <a href="mailto:kabeer@kabeers.network" style="margin-right: 1rem;">Email</a>
+                <a download href="https://docs.cloud.kabeers.network/[short]%20resume%20(4).pdf">Download</a>
             </div>
-            <div class="section">
-                <h2>Academic Qualification</h2>
-                <h3>Bachelors in Computer Science</h3>
-                <p>IBA Karachi</p>
-                <h3>AS Level, Physics Math and Chemistry</h3>
-                <p>Credo College, Gulshan Karachi</p>
-                <h3>O Level, Biology and Computer Science</h3>
-                <p>Habib Schools, Sultanabad, Karachi</p>
-            </div>
-            <div class="section">
-                <h2>Professional Experience</h2>
-                <h3>Technical Team Lead – Ek Qadam Aur</h3>
-                <p>Non-profit organization</p>
-                <ul>
-                    <li>
-                        Managing critical infrastructure and serving 3000 requests daily.
-                    </li>
-                    <li>
-                        Design and manage chats app.
-                    </li>
-                </ul>
-                <h3>App Development Team Lead – WNets</h3>
-                <p></p>
-                <ul>
-                    <li>Led the app development team.</li>
-                </ul>
-                <h3>Founder – The Other Dev & Kabeer’s Network</h3>
-                <p></p>
-                <ul>
-                    <li>
-                        Responsible for software orders, coding, and deployment.
-                    </li>
-                </ul>
-            </div>
-            <div class="section">
-                <h2>Skills</h2>
-                <ul>
-                    <li>Programming: C++, Python, HTML, React, Next.js, Vue, Svelte</li>
-                    <li>Data Analytics: Ms Excel, PowerBI</li>
-                    <li>Languages: English, Urdu (native)</li>
-                </ul>
-            </div>
+            <iframe
+                src="https://docs.google.com/document/d/e/2PACX-1vQ_OZ3ayprEASRRY0VfYhhzrCfTcFtzo3bu7PRccBLYo_YMWoIwXO1BJlsRLu-GRFy7p4VaHYZ9XNR4/pub?embedded=true"
+                style="width: 100%; min-height: 100%;" frameborder="0"></iframe>
         </div>
-        <div class="branding">
-            <strong>Muhammad Kabeer</strong> | Sponsored by
-            <a href="https://otherdev.com">otherdev.com</a>
+        <div style="
+        background-color: #000;
+        color: #fff;
+        padding: 10px;
+        font-family: 'Roboto', sans-serif;
+      " class="branding">
+            <strong>Kabeer Jaffri</strong> | Sponsored by
+            <a href="https://kabeer.kabeers.network" style="color: #f3bf6f; text-decoration: none">Kabeer's Network</a>
         </div>
     </div>
 </body>
