@@ -1,25 +1,186 @@
 <!DOCTYPE html>
-<html>
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <meta name="description" content="I’m a computer science bachelors student at IBA and a really passionate software developer with a focus on problem solving. I have more than 5 years of successful software and team experience making both full-stack web, and app development, with popular frameworks, technologies and databases. ">
-      <meta name="keywords" content="kabeer jaffri, resume, job, hire me">
-      <meta name="twitter:site" content="@MrPixelPirate">
-      <meta name="twitter:creator" content="@MrPixelPirate">
-      <title>Kabeer Jaffri - Resume</title>
-   </head>
-   <body>
-      <div style="width: auto; max-width: 40rem; padding: 0 2rem 0 2rem; display: flex; justify-content: space-between">
-          <a href="mailto:kabeer@kabeers.network">Email</a>
-          <a download href="https://docs.cloud.kabeers.network/[short]%20resume%20(4).pdf">Download</a>
-      </div>
-      <iframe src="https://docs.google.com/document/d/e/2PACX-1vQ_OZ3ayprEASRRY0VfYhhzrCfTcFtzo3bu7PRccBLYo_YMWoIwXO1BJlsRLu-GRFy7p4VaHYZ9XNR4/pub?embedded=true" style="width: 100%; min-height: 100vh" frameborder="0"></iframe>
-      <style>
-         * {
-            margin: 0, padding: 0, box-sizing: border-box;
-         }
-      </style>
-   </body>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kabeer Jaffri - Resume</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description"
+        content="I’m a computer science bachelors student at IBA and a really passionate software developer with a focus on problem solving. I have more than 5 years of successful software and team experience making both full-stack web, and app development, with popular frameworks, technologies and databases. ">
+    <meta name="keywords" content="kabeer jaffri, resume, job, hire me">
+    <meta name="twitter:site" content="@MrPixelPirate">
+    <meta name="twitter:creator" content="@MrPixelPirate">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet" />
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    /> -->
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            height: 150vh;
+            margin: 2rem auto;
+            background: #fff;
+            /* padding: 2rem; */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            text-align: left;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        h2 {
+            font-weight: 300;
+            /* border-bottom: 2px solid #FAFAFA; */
+            /* padding-bottom: 0.5rem; */
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section h3 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .section p,
+        .section ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        .section ul {
+            list-style-type: none;
+        }
+
+        .section ul li {
+            margin-bottom: 0.5rem;
+            padding-left: 2rem;
+        }
+
+        .contact-info {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            /* text-decoration: underline; */
+        }
+
+        @media (max-width: 600px) {
+            body {
+                background-color: white;
+            }
+
+            .container {
+                width: 100%;
+                height: 250vh;
+                box-shadow: none;
+            }
+
+            /* .branding {
+                position: relative;
+                writing-mode: vertical-rl;
+                text-orientation: upright;
+                height: 100vh;
+                max-width: 2rem;
+            } */
+        }
+
+        hr {
+            border-color: lightgray;
+        }
+
+        .rotating-img {
+            animation-duration: 20s;
+            animation-name: rotate;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .branding {
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex">
+        <div class="container" style="
+        position: relative;
+        overflow: hidden;
+        z-index: 2;
+        padding-bottom: 0rem;
+        margin-bottom: 2.5rem;
+        /* overflow-y: scroll; */
+      ">
+            <img src="https://pixelos.net/Images/Shapes/Monetp-b.png" class="rotating-img" style="
+          position: absolute;
+          width: 10rem;
+          height: auto;
+          top: 0.5rem;
+          right: 1rem;
+          z-index: 1;
+        " />
+
+            <div
+                style="width: 50%; padding: 2rem 2rem 0 2rem; display: flex; justify-content: start">
+                <a href="mailto:kabeer@kabeers.network" style="margin-right: 1rem;">Email</a>
+                <a download href="https://docs.cloud.kabeers.network/[short]%20resume%20(4).pdf">Download</a>
+            </div>
+            <iframe
+                src="https://docs.google.com/document/d/e/2PACX-1vQ_OZ3ayprEASRRY0VfYhhzrCfTcFtzo3bu7PRccBLYo_YMWoIwXO1BJlsRLu-GRFy7p4VaHYZ9XNR4/pub?embedded=true"
+                style="width: 100%; min-height: 100%;" frameborder="0"></iframe>
+        </div>
+        <div style="
+        background-color: #000;
+        color: #fff;
+        padding: 10px;
+        font-family: 'Roboto', sans-serif;
+      " class="branding">
+            <strong>Kabeer Jaffri</strong> | Sponsored by
+            <a href="https://kabeer.kabeers.network" style="color: #f3bf6f; text-decoration: none">Kabeer's Network</a>
+        </div>
+    </div>
+</body>
+
 </html>
