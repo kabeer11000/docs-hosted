@@ -568,7 +568,7 @@ body.in-menu #stage, body.in-menu #prompt, body.in-menu #counter, body.in-menu #
 
   /* ── Volumes 3D Menu Handlers ──────────────────────────────────── */
   window.openVolumes = function() {
-    AudioEngine.silence(); // Explicitly silence on open
+    if (audioOn) AudioEngine.silence(); // Explicitly silence on open
     isMenuOpen = true;
     document.body.classList.add('in-menu');
     orbMenu.classList.add('active');
@@ -588,20 +588,10 @@ body.in-menu #stage, body.in-menu #prompt, body.in-menu #counter, body.in-menu #
     cancelAnimationFrame(physicsId);
     document.body.classList.remove('in-menu');
     orbMenu.classList.remove('active');
-    
-    // Explicitly restore audio if it was on
-    if (audioOn) {
-      AudioEngine.init();
+    // Restore audio only if we were already playing (not on first boot)
+    if (audioOn && entries && entries[current] && entries[current].audio) {
       AudioEngine.apply(entries[current].audio);
     }
-  };
-
-  window.closeVolumes = function() {
-    isMenuOpen = false;
-    cancelAnimationFrame(physicsId);
-    document.body.classList.remove('in-menu');
-    orbMenu.classList.remove('active');
-    if (audioOn) AudioEngine.apply(entries[current].audio);
   };
 
   window.selectVolume = function(key) {
@@ -625,6 +615,11 @@ body.in-menu #stage, body.in-menu #prompt, body.in-menu #counter, body.in-menu #
 
     // Wait for the orb to fully swallow the viewport
     setTimeout(() => {
+      // First interaction — start audio now (orb click counts as user gesture)
+      if (!audioOn) {
+        audioOn = true;
+        AudioEngine.init();
+      }
       loadVolume(key, 0);
 
       // Smoothly fade out the expanded menu to reveal the exact same color underneath it
@@ -869,14 +864,15 @@ body.in-menu #stage, body.in-menu #prompt, body.in-menu #counter, body.in-menu #
         master   = ctx.createGain(); master.gain.value   = 0;   master.connect(ctx.destination);
         duckGain = ctx.createGain(); duckGain.gain.value = 1.0; duckGain.connect(master);
 
-        // Breath LFO: slow volume swell (~18s cycle, ±6%)
+        // Breath LFO: slow volume swell (~14s cycle, ±18% of duckGain)
+        // Modulates duckGain so the swell is relative to current level
         breathLFO = ctx.createOscillator();
         breathLFO.type = 'sine';
-        breathLFO.frequency.value = 0.055;
+        breathLFO.frequency.value = 0.072; // ~14s cycle
         const breathDepth = ctx.createGain();
-        breathDepth.gain.value = 0.06;
+        breathDepth.gain.value = 0.18; // ±18% — clearly audible
         breathLFO.connect(breathDepth);
-        breathDepth.connect(master.gain);
+        breathDepth.connect(duckGain.gain); // modulate duck layer, not master
         breathLFO.start();
 
         // Vibrato LFO: very slow pitch drift (~8s cycle)
@@ -952,7 +948,9 @@ body.in-menu #stage, body.in-menu #prompt, body.in-menu #counter, body.in-menu #
 
     function silence() {
       if (!init || !ctx || !master) return;
-      master.gain.setTargetAtTime(0, ctx.currentTime, 1.5);
+      // Cancel any breath modulation and ramp master to zero cleanly
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.setTargetAtTime(0, ctx.currentTime, 1.0);
     }
 
     return { init: initialize, apply: applyState, duck, unduck, silence };
