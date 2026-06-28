@@ -4,671 +4,1135 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Void</title>
-<style>
-/* ═══════════════════════════════════════════════════════════════════════
-   VOID — a visual novel in fragments
-   ═══════════════════════════════════════════════════════════════════════ */
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
+<style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --white: #ffffff;
-  --gray:  rgba(200, 200, 200, 0.6);
-  --red:   #880015;
-  --font:  'Playfair Display', Georgia, 'Times New Roman', serif;
-  --size:  clamp(1.05rem, 1.6vw, 1.25rem);
+  --font: 'Playfair Display', Georgia, serif;
+  --size: clamp(1.05rem, 1.6vw, 1.25rem);
 }
 
 html, body {
   width: 100%; height: 100%;
   overflow: hidden;
-  background: #000;
   font-family: var(--font);
   font-size: var(--size);
-  color: var(--white);
   line-height: 2;
   cursor: default;
   user-select: none;
+  transition: background-color 2.5s ease, color 2.5s ease;
 }
 
-/* ── Layer 1: Conway's Game of Life ───────────────────────────────── */
-#gol {
-  position: fixed;
-  inset: 0;
-  width: 100%; height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.12;
-}
+/* --- Thematic Schemes --- */
+.sch-dark { background: #000; color: #fff; --fg: #ffffff; --dim: rgba(255, 255, 255, 0.5); --mut: rgba(255, 255, 255, 0.22); --red: #880015; --bar: rgba(255, 255, 255, 0.15); --ctr: rgba(255, 255, 255, 0.25); --gol: #ffffff; }
+.sch-inv { background: #f5f5f0; color: #111; --fg: #111111; --dim: rgba(0, 0, 0, 0.5); --mut: rgba(0, 0, 0, 0.25); --red: #8b0010; --bar: rgba(0, 0, 0, 0.15); --ctr: rgba(0, 0, 0, 0.3); --gol: rgba(0, 0, 0, 0.18); }
+.sch-red { background: #0a0000; color: #f0e0e0; --fg: #f0e0e0; --dim: rgba(220, 160, 160, 0.45); --mut: rgba(200, 140, 140, 0.2); --red: #cc2211; --bar: rgba(200, 140, 140, 0.15); --ctr: rgba(200, 140, 140, 0.25); --gol: #f0e0e0; }
 
-/* ── Layer 2: Grain canvas ─────────────────────────────────────────── */
-#grain {
-  position: fixed;
-  inset: 0;
-  width: 100%; height: 100%;
-  z-index: 200;
-  pointer-events: none;
-  opacity: 0.09;
-}
+/* --- Background Canvases --- */
+#gol { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.12; transition: opacity 2s ease; }
+#grain { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 200; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay; }
 
-/* ── Layer 3: Black hole ────────────────────────────────────────────── */
+/* --- The Void (Black Hole) --- */
 #bh {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 680px; height: 680px;
-  border-radius: 50%;
-  z-index: 2;
-  pointer-events: none;
-  background: radial-gradient(circle,
-    #000 0%, #000 24%,
-    rgba(0,0,0,0.88) 44%,
-    rgba(0,0,0,0.38) 65%,
-    transparent 100%
-  );
-  box-shadow:
-    0 0 140px  60px rgba(0,0,0,0.88),
-    0 0 380px 130px rgba(0,0,0,0.35);
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1);
+  width: 800px; height: 800px; border-radius: 50%;
+  z-index: 2; pointer-events: none;
+  background: radial-gradient(circle, var(--bg-center, #000) 0%, var(--bg-mid, rgba(0,0,0,0.98)) 25%, var(--bg-edge, rgba(0,0,0,0.8)) 45%, transparent 75%);
+  box-shadow: 0 0 160px 80px var(--bg-glow1, rgba(0,0,0,0.88)), 0 0 450px 160px var(--bg-glow2, rgba(0,0,0,0.4));
+  filter: blur(25px); /* Creates the ethereal, gaseous falloff */
   animation: bh-pulse 44s ease-in-out infinite;
-  transition: width 3s, height 3s, box-shadow 3s, opacity 2.5s;
+  transition: width 4s ease, height 4s ease, box-shadow 4s ease, opacity 3s ease, background 2s ease, transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), filter 2s ease;
 }
-@keyframes bh-pulse {
-  0%,  100% { opacity: 0.62; transform: translate(-50%,-50%) scale(1);   }
-  50%        { opacity: 1;    transform: translate(-50%,-50%) scale(1.05); }
-}
-#bh.sz-1 {
-  width: 900px; height: 900px;
-  box-shadow: 0 0 200px 90px rgba(0,0,0,0.9), 0 0 540px 200px rgba(0,0,0,0.46);
-  animation: bh-pulse 32s ease-in-out infinite;
-}
-#bh.sz-2 {
-  width: 1150px; height: 1150px;
-  box-shadow: 0 0 270px 110px rgba(0,0,0,0.9), 0 0 740px 290px rgba(0,0,0,0.52);
-  animation: bh-pulse 20s ease-in-out infinite;
-}
+
+.sch-inv #bh { --bg-center: #f5f5f0; --bg-mid: rgba(245,245,240,0.98); --bg-edge: rgba(245,245,240,0.8); --bg-glow1: rgba(245,245,240,0.9); --bg-glow2: rgba(245,245,240,0.5); }
+
+@keyframes bh-pulse { 0%, 100% { opacity: 0.62; } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); } }
+
+#bh.sz-1 { width: 1050px; height: 1050px; box-shadow: 0 0 250px 120px var(--bg-glow1), 0 0 650px 250px var(--bg-glow2); filter: blur(35px); animation-duration: 32s; }
+#bh.sz-2 { width: 1350px; height: 1350px; box-shadow: 0 0 350px 160px var(--bg-glow1), 0 0 850px 350px var(--bg-glow2); filter: blur(50px); animation-duration: 20s; }
 #bh.dead { opacity: 0; }
 
-/* ── Layer 4: Curtain ──────────────────────────────────────────────── */
-#curtain {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 500;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 1.5s ease;
-}
+/* --- UI Elements & Transitions --- */
+#curtain { position: absolute; inset: 0; z-index: 500; pointer-events: none; background: inherit; opacity: 0; transition: opacity 2s ease; }
 #curtain.up { opacity: 1; }
 
-/* ── Stage ──────────────────────────────────────────────────────────── */
-#stage {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 120;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 3vh 4vw; transition: opacity 0.8s ease;
 }
 
-/* ── Scene ──────────────────────────────────────────────────────────── */
-.scene {
+.top-btn { font-family: inherit; font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mut); cursor: pointer; opacity: 0.5; transition: opacity 0.3s, color 0.3s; background: none; border: 0; outline: none; }
+.top-btn:hover { opacity: 1; color: var(--fg); }
+#vol-tag { font-size: 0.6rem; letter-spacing: 0.25em; opacity: 0.4; text-transform: uppercase; color: var(--mut); transition: color 0.3s; }
+
+/* --- In-Menu State Triggers --- */
+body.in-menu #bh {
+  transform: translate(-50%, -50%) scale(0.01);
+  opacity: 0;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+  animation: none;
+}
+body.in-menu #stage, body.in-menu #prompt, body.in-menu #counter, body.in-menu #topbar {
+  opacity: 0 !important;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+/* --- 3D Floating Orb Menu --- */
+#orb-menu {
+  position: fixed; inset: 0; z-index: 100;
+  opacity: 0; pointer-events: none;
+  transition: opacity 1.2s ease 0.3s; /* Delay fade in slightly after collapse */
+  background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.6) 100%);
+}
+#orb-menu.active { opacity: 1; pointer-events: all; }
+
+.orb-menu-nav { position: absolute; top: 3vh; left: 4vw; z-index: 110; transition: opacity 0.5s ease; }
+.orb-menu-nav .top-btn { color: rgba(255,255,255,0.6); }
+.orb-menu-nav .top-btn:hover { color: #fff; }
+
+.orb-container { position: relative; width: 100vw; height: 100vh; perspective: 1000px; }
+
+.orb-wrapper {
   position: absolute;
-  inset: 0;
-  display: none;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 10vh 16vw;
-}
-.scene.active { display: flex; }
-
-/* ── Text blocks ────────────────────────────────────────────────────── */
-.lbl {
-  font-size: 0.7rem;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: rgba(200,200,200,0.18);
-  margin-bottom: 5vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transform: translate(calc(-50% + var(--px, 0px)), calc(-50% + var(--py, 0px)));
+  transition: left 1.2s cubic-bezier(0.16, 1, 0.3, 1), top 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
 }
 
-.block {
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 1.1s ease, transform 1.1s ease;
-  max-width: 52ch;
+.ow-1 { left: 25vw; top: 45vh; z-index: 3; }
+.ow-2 { left: 50vw; top: 55vh; z-index: 2; }
+.ow-3 { left: 75vw; top: 35vh; z-index: 1; }
+
+.orb {
+  position: relative;
+  width: var(--orb-size, clamp(140px, 16vw, 240px));
+  height: var(--orb-size, clamp(140px, 16vw, 240px));
+  border-radius: 50%; cursor: pointer;
+  transition: width 1.5s cubic-bezier(0.25, 1, 0.3, 1), height 1.5s cubic-bezier(0.25, 1, 0.3, 1), transform 0.8s cubic-bezier(0.25, 1, 0.3, 1);
 }
+.orb::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  box-shadow: inset -15px -20px 40px rgba(0,0,0,0.6), inset 10px 10px 30px rgba(255,255,255,0.15);
+  pointer-events: none; transition: opacity 0.8s ease;
+}
+
+/* Gradients purposefully matched to root background themes so expansion is seamless */
+.orb-1 { background: radial-gradient(circle at 50% 50%, #222 0%, #000 60%, #000 100%); box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.08); }
+.orb-2 { background: radial-gradient(circle at 50% 50%, #fff 0%, #f5f5f0 60%, #f5f5f0 100%); box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 50px rgba(0,0,0,0.15); }
+.orb-3 { background: radial-gradient(circle at 50% 50%, #411 0%, #0a0000 60%, #0a0000 100%); box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 60px rgba(200,30,30,0.3); }
+
+.orb-wrapper:hover .orb { transform: scale(1.08); }
+
+/* Orb Selection States */
+.orb-wrapper.selected {
+  left: 50vw !important; top: 50vh !important; z-index: 500;
+  --px: 0px !important; --py: 0px !important;
+}
+.orb-wrapper.selected .orb {
+  --orb-size: 200vmax; /* Expands dimensions natively, avoiding pixelation */
+  transform: scale(1) !important;
+}
+.orb-wrapper.selected .orb::after { opacity: 0; }
+.orb-wrapper.fade-out { opacity: 0 !important; pointer-events: none; }
+
+.orb-label {
+  position: absolute; top: 120%;
+  text-align: center; color: rgba(255,255,255,0.7);
+  font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+  transition: opacity 0.5s ease; text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+  pointer-events: none; white-space: nowrap;
+}
+.orb-wrapper:hover .orb-label { color: #fff; }
+
+.orb-title { font-size: 1.1rem; font-style: italic; text-transform: none; letter-spacing: 0.05em; margin-top: 1vh; opacity: 0.5; transition: opacity 0.5s; }
+.orb-wrapper:hover .orb-title { opacity: 0.9; }
+
+/* Responsive adjustments */
+@media(max-width: 768px) {
+  .ow-1 { left: 50vw; top: 20vh; }
+  .ow-2 { left: 50vw; top: 50vh; }
+  .ow-3 { left: 50vw; top: 80vh; }
+}
+
+/* --- Old Entries Overlay --- */
+.overlay { position: fixed; inset: 0; z-index: 150; display: none; flex-direction: column; padding: 10vh 10vw; overflow-y: auto; background: inherit; }
+.overlay.show { display: flex; animation: sel-in 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+.overlay.hide { animation: sel-out 0.4s ease forwards; }
+
+@keyframes sel-in { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes sel-out { to { opacity: 0; transform: translateY(-10px); } }
+
+.sel-back { font-family: inherit; font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mut); cursor: pointer; opacity: 0.5; margin-bottom: 6vh; transition: opacity 0.3s; background: none; border: 0; align-self: flex-start; }
+.sel-back:hover { opacity: 1; color: var(--fg); }
+.sel-title { font-size: clamp(1.4rem, 2.5vw, 2.2rem); letter-spacing: 0.05em; margin-bottom: 0.5vh; color: var(--fg); }
+.sel-sub { font-size: 0.75rem; color: var(--dim); font-style: italic; margin-bottom: 6vh; }
+.sel-entry { display: flex; align-items: center; justify-content: space-between; padding: 3vh 0; border-bottom: 1px solid var(--bar); cursor: pointer; opacity: 0.6; transition: padding-left 0.4s ease, opacity 0.3s, border-color 0.3s; }
+.sel-entry:hover { padding-left: 2vw; opacity: 1; }
+.sel-entry.current { opacity: 1; }
+.sel-entry.current .sel-e-num { opacity: 1; }
+.sel-entry.current .sel-e-dot { opacity: 0.9; transform: scale(1.2); }
+.sel-e-num { font-size: 0.6rem; letter-spacing: 0.3em; width: 4vw; flex-shrink: 0; color: var(--mut); opacity: 0.5; transition: opacity 0.3s; }
+.sel-e-name { flex: 1; font-size: clamp(1rem, 1.4vw, 1.2rem); color: var(--fg); }
+.sel-e-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); opacity: 0.2; transition: opacity 0.3s, transform 0.3s; }
+
+/* --- Stage & Text Entries --- */
+#stage { position: absolute; inset: 0; z-index: 10; transition: opacity 0.8s ease; }
+.entry { position: absolute; inset: 0; display: none; flex-direction: column; align-items: flex-start; justify-content: center; padding: 10vh 16vw; }
+.entry.active { display: flex; }
+.lbl { font-size: 0.7rem; letter-spacing: 0.42em; text-transform: uppercase; margin-bottom: 5vh; color: var(--mut); transition: color 1s; }
+.block { opacity: 0; transform: translateY(8px); transition: opacity 1.2s ease, transform 1.2s ease, color 1s; max-width: 52ch; }
 .block.in { opacity: 1; transform: translateY(0); }
+.w { margin-bottom: 3.5vh; color: var(--fg); }
+.g { font-style: italic; margin-bottom: 2.5vh; color: var(--dim); }
+.r { margin-top: 2vh; color: var(--red); }
 
-.w { color: var(--white); margin-bottom: 3.5vh; }
-.g { color: var(--gray); font-style: italic; margin-bottom: 2.5vh; }
-.r { color: var(--red);   margin-top: 2vh; }
-
-/* ── SVG illustrations ──────────────────────────────────────────────── */
-.illus {
-  opacity: 0;
-  transition: opacity 1.2s ease;
-  margin-top: 4vh;
-}
-.illus.in { opacity: 0.82; }
-
+/* --- Illustrations --- */
+.illus { opacity: 0; transition: opacity 1.5s ease; margin-top: 5vh; color: var(--fg); }
+.illus.in { opacity: 0.85; }
+.illus path, .illus circle, .illus line, .illus ellipse { stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1200; stroke-dashoffset: 1200; transition: stroke-dashoffset 3.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.illus.in path, .illus.in circle, .illus.in line, .illus.in ellipse { stroke-dashoffset: 0; }
 #flower-svg { width: clamp(60px, 8vw, 100px); }
-#flower-svg circle,
-#flower-svg line,
-#flower-svg path {
-  stroke: white;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
 #shoes-svg { width: clamp(100px, 13vw, 155px); }
-#shoes-svg path {
-  stroke: white;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
 
-/* ── Audio prompt ─────────────────────────────────────────────────── */
-#audio-note {
-  position: fixed;
-  top: 4vh;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.62rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(200,200,200,0.12);
-  z-index: 20;
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity 1s ease;
-}
-#audio-note.hidden { opacity: 0; }
-
-/* ── Prompt ─────────────────────────────────────────────────────────── */
-#prompt {
-  position: fixed;
-  bottom: 5vh;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.65rem;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: rgba(200,200,200,0.14);
-  z-index: 20;
-  pointer-events: none;
-  transition: opacity 0.7s ease;
-  white-space: nowrap;
-}
+/* --- Footer Elements --- */
+#prompt { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); font-size: 0.65rem; letter-spacing: 0.32em; text-transform: uppercase; z-index: 20; pointer-events: none; transition: opacity 0.8s ease, color 1s; white-space: nowrap; color: var(--mut); }
 #prompt.hidden { opacity: 0; }
+#counter { position: absolute; bottom: 5vh; right: 8vw; font-size: 0.6rem; letter-spacing: 0.25em; z-index: 20; pointer-events: none; color: var(--ctr); transition: color 1s, opacity 0.8s ease; }
 
-/* ── Progress dots ─────────────────────────────────────────────────── */
-#progress {
-  position: fixed;
-  bottom: 5vh;
-  right: 8vw;
-  display: flex;
-  gap: 5px;
-  z-index: 20;
+/* --- Full Entry Reveal Panel --- */
+.entry-full {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 10vh 16vw 14vh;
+  transform: translateY(100%);
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+  opacity: 0;
   pointer-events: none;
+  overflow-y: auto;
+  z-index: 5;
+  /* Frosted layer — inherits bg color */
+  background: inherit;
 }
-.pdot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: rgba(200,200,200,0.1);
-  transition: background 0.4s, transform 0.4s;
+.entry-full::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--bar);
+  opacity: 0.6;
 }
-.pdot.done   { background: rgba(200,200,200,0.38); }
-.pdot.active { background: rgba(200,200,200,0.8); transform: scale(1.5); }
+.entry.active .entry-full.revealed {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+/* Excerpt drifts up slightly as full panel rises */
+.entry.active.excerpt-dimmed > .lbl,
+.entry.active.excerpt-dimmed > .block,
+.entry.active.excerpt-dimmed > .illus {
+  transform: translateY(-18px) !important;
+  opacity: 0 !important;
+  transition: opacity 0.55s ease, transform 0.75s cubic-bezier(0.16,1,0.3,1) !important;
+}
 
-/* ── Responsive ─────────────────────────────────────────────────────── */
-@media (max-width: 580px) {
-  .scene { padding: 8vh 8vw; }
-  #bh       { width: 480px; height: 480px; }
-  #bh.sz-1 { width: 680px; height: 680px; }
-  #bh.sz-2 { width: 880px; height: 880px; }
+.full-label {
+  font-size: 0.62rem; letter-spacing: 0.38em; text-transform: uppercase;
+  color: var(--mut); margin-bottom: 4vh; opacity: 0.7;
 }
+.full-date {
+  font-size: 0.6rem; letter-spacing: 0.2em; color: var(--dim); margin-bottom: 5vh;
+  font-style: italic; opacity: 0.6;
+}
+.full-para {
+  max-width: 58ch; margin-bottom: 3vh;
+  color: var(--fg); line-height: 1.95; font-size: clamp(0.95rem, 1.35vw, 1.1rem);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.full-para.italic { font-style: italic; color: var(--dim); }
+.full-para.accent { color: var(--red); margin-top: 1vh; }
+.full-para.in { opacity: 1; transform: translateY(0); }
+
+/* Scroll hint in the prompt when on excerpt layer */
+.prompt-scroll { display: inline; }
+.prompt-advance { display: inline; }
+.in-full-view #prompt .prompt-scroll { display: none; }
+.in-full-view #prompt .prompt-advance { display: inline; }
+
+/* Collapse button inside full panel */
+.full-collapse {
+  position: absolute; top: 3.5vh; right: 4vw;
+  font-family: inherit; font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--mut); opacity: 0.4; cursor: pointer; background: none; border: 0; outline: none;
+  transition: opacity 0.3s, color 0.3s;
+}
+.full-collapse:hover { opacity: 0.9; color: var(--fg); }
+
+/* Scroll progress pip row */
+.full-scroll-hint {
+  position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);
+  font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mut);
+  opacity: 0.35; white-space: nowrap; pointer-events: none;
+}
+
+@media(max-width: 768px) { .entry-full { padding: 8vh 8vw 14vh; } }
+
+@media(max-width: 768px) { .entry { padding: 8vh 8vw; } .sel-e-num { width: 10vw; } }
 </style>
 </head>
 <body>
 
 <canvas id="gol"></canvas>
 <canvas id="grain"></canvas>
+
+<!-- Main Stage Elements -->
 <div id="bh"></div>
 <div id="curtain"></div>
+<div id="prompt"><span class="prompt-scroll">scroll to read · </span><span class="prompt-advance">space · click to continue</span></div>
+<div id="counter"></div>
+<div id="stage"></div>
 
-<div id="audio-note">click anywhere to enable audio</div>
-<div id="prompt">space · click to continue</div>
-
-<div id="progress">
-  <div class="pdot" id="d0"></div>
-  <div class="pdot" id="d1"></div>
-  <div class="pdot" id="d2"></div>
-  <div class="pdot" id="d3"></div>
-  <div class="pdot" id="d4"></div>
-  <div class="pdot" id="d5"></div>
+<div id="topbar">
+  <button class="top-btn" id="vol-btn" onclick="openVolumes()">Volumes</button>
+  <div id="vol-tag"></div>
+  <button class="top-btn" id="entries-btn" onclick="openSelector()">Entries</button>
 </div>
 
-<div id="stage">
-
-  <!-- SCENE 1: SEPTEMBER -->
-  <div class="scene active" id="sc0">
-    <p class="lbl block">September</p>
-    <p class="w block">I had been rehearsing the line all day. Staring at it in my notes app. Considering every possible scenario.</p>
-    <p class="w block">"I love your shoes," I said. Casually.</p>
-    <svg class="illus" id="shoes-svg" viewBox="0 0 240 90" fill="none">
-      <ellipse cx="52" cy="52" rx="42" ry="18" stroke-width="1.4"/>
-      <ellipse cx="52" cy="46" rx="42" ry="14" stroke-width="1.4"/>
-      <line x1="30" y1="38" x2="74" y2="38" stroke-width="1"/>
-      <line x1="32" y1="38" x2="32" y2="32" stroke-width="1"/>
-      <line x1="42" y1="38" x2="42" y2="32" stroke-width="1"/>
-      <line x1="52" y1="38" x2="52" y2="32" stroke-width="1"/>
-      <line x1="62" y1="38" x2="62" y2="32" stroke-width="1"/>
-      <ellipse cx="188" cy="52" rx="42" ry="18" stroke-width="1.4"/>
-      <ellipse cx="188" cy="46" rx="42" ry="14" stroke-width="1.4"/>
-      <line x1="166" y1="38" x2="210" y2="38" stroke-width="1"/>
-      <line x1="168" y1="38" x2="168" y2="32" stroke-width="1"/>
-      <line x1="178" y1="38" x2="178" y2="32" stroke-width="1"/>
-      <line x1="188" y1="38" x2="188" y2="32" stroke-width="1"/>
-      <line x1="198" y1="38" x2="198" y2="32" stroke-width="1"/>
-    </svg>
+<!-- 3D Parallax Volumes Menu -->
+<div id="orb-menu">
+  <div class="orb-menu-nav">
+    <button class="top-btn menu-back" onclick="closeVolumes()">← Resume</button>
   </div>
-
-  <!-- SCENE 2: THE GRASS -->
-  <div class="scene" id="sc1">
-    <p class="lbl block">The Grass</p>
-    <p class="w block">She started texting me while sitting right in front of me.</p>
-    <p class="w block">Then she came over and sat beside me. We shared playlists. It was kind of cute.</p>
+  <div class="orb-container">
+    <div class="orb-wrapper ow-1" onclick="selectVolume(1)">
+      <div class="orb orb-1" id="orb-1"></div>
+      <div class="orb-label">Vol. 1<div class="orb-title">The Eesha Arc</div></div>
+    </div>
+    <div class="orb-wrapper ow-2" onclick="selectVolume(2)">
+      <div class="orb orb-2" id="orb-2"></div>
+      <div class="orb-label">Vol. 2<div class="orb-title">The Aftermath</div></div>
+    </div>
+    <div class="orb-wrapper ow-3" onclick="selectVolume(3)">
+      <div class="orb orb-3" id="orb-3"></div>
+      <div class="orb-label">Vol. 3<div class="orb-title">The Reckoning</div></div>
+    </div>
   </div>
+</div>
 
-  <!-- SCENE 3: THE CONCERT -->
-  <div class="scene" id="sc2">
-    <p class="lbl block">The Concert In Our Rooms</p>
-    <p class="g block">Travis Scott's beats filled the air.</p>
-    <p class="g block">We sang. Not just the words — the spaces between them.</p>
-    <p class="g block">We fell asleep connected.</p>
-    <p class="g block">Somewhere across the city. Still together.</p>
-  </div>
-
-  <!-- SCENE 4: THE BOUQUET -->
-  <div class="scene" id="sc3">
-    <p class="lbl block">November 7 — The Bouquet</p>
-    <svg class="illus" id="flower-svg" viewBox="0 0 120 200" fill="none">
-      <line x1="60" y1="200" x2="60" y2="100" stroke-width="1.5"/>
-      <path d="M60 150 Q42 140 35 150 Q42 160 60 152" stroke-width="1"/>
-      <path d="M60 165 Q78 155 85 165 Q78 175 60 167" stroke-width="1"/>
-      <ellipse cx="60" cy="72" rx="12" ry="22" stroke-width="1.2"/>
-      <ellipse cx="82" cy="82" rx="12" ry="22" stroke-width="1.2" transform="rotate(72 60 100)"/>
-      <ellipse cx="76" cy="108" rx="12" ry="22" stroke-width="1.2" transform="rotate(144 60 100)"/>
-      <ellipse cx="44" cy="108" rx="12" ry="22" stroke-width="1.2" transform="rotate(-144 60 100)"/>
-      <ellipse cx="38" cy="82" rx="12" ry="22" stroke-width="1.2" transform="rotate(-72 60 100)"/>
-      <circle cx="60" cy="100" r="10" stroke-width="1.2"/>
-      <circle cx="60" cy="100" r="4" fill="white" fill-opacity="0.15"/>
-    </svg>
-    <p class="w block" style="margin-top:4vh">The satisfaction of seeing her smile when I handed her the bouquet was enough of a reward.</p>
-  </div>
-
-  <!-- SCENE 5: NOVEMBER 22 — THE END -->
-  <div class="scene" id="sc4">
-    <p class="lbl block">November 22 — The End</p>
-    <p class="w block">She had a long list of questions.</p>
-    <p class="w block">I answered every question except one.</p>
-    <p class="g block">"What do you want us to be now?"</p>
-    <p class="w block">I teared up. I didn't have an answer.</p>
-    <p class="r block">"I don't think I can be with you. It hurts too much."</p>
-  </div>
-
-  <!-- SCENE 6: THE VOID -->
-  <div class="scene" id="sc5">
-    <p class="w block">I love her, with every fiber of my being.</p>
-    <p class="w block">And I know she loves me too.</p>
-    <p class="w block">I just messed it all up.</p>
-  </div>
-
-</div><!-- /stage -->
+<!-- Entries Selector Overlay (Unchanged) -->
+<div id="sel-overlay" class="overlay">
+  <button class="sel-back" onclick="closeOverlay('sel-overlay')">← Back</button>
+  <div class="sel-title" id="sel-title"></div>
+  <div class="sel-sub" id="sel-sub"></div>
+  <div id="sel-list"></div>
+</div>
 
 <script>
-(function () {
+(function(){
   'use strict';
 
-  /* ═══════════════════════════════════════════════════════════════════════
-     AUDIO ENGINE — generative drone, tension, noise
-     ═══════════════════════════════════════════════════════════════════════ */
-  var Audio = (function () {
-    var ctx = null;
-    var master = null;
-    var initialized = false;
-    var currentScene = 0;
+  /* ── Content Definitions ─────────────────────────────────────────────── */
+  const VOL_INFO = {
+    1: { name: 'The Eesha Arc',  sub: 'September — November', theme: 'sch-dark' },
+    2: { name: 'The Aftermath',  sub: 'December — January',   theme: 'sch-inv' },
+    3: { name: 'The Reckoning',  sub: 'February',             theme: 'sch-red' }
+  };
 
-    // Layers
-    var drone1, drone2, drone3;   // sine wave drones
-    var noiseNode;                // filtered noise
-    var droneGain = [], droneOsc = [];
+  const VOL = {
+    1: [
+      { label:'01 — September', bh:'none', illus:null, blocks:[
+        { cls:'w', t:'I had been rehearsing the line all day. Staring at it in my notes app. Considering every possible scenario.' },
+        { cls:'w', t:'"I love your shoes," I said. Casually.' }
+      ], full:[
+        { cls:'', t:"It was the kind of September afternoon where the light comes in sideways and makes ordinary things look important. She was sitting two rows ahead in the courtyard, wearing white canvas sneakers with hand-drawn stars on the toe box. I had been watching her draw them during the last period." },
+        { cls:'', t:"I'd written the line in my notes at 9:17 AM. I edited it twice. Once to remove 'actually' from the front, once to reconsider the word 'love' — was it too much? Not enough? Does anyone think about shoes that much? She might." },
+        { cls:'', t:"She looked up when I said it. Not the way people look up when they're surprised — the way they look up when they've been waiting for something to start. She said, \"You're the third person today.\" Then, after a beat: \"But you're the first one who looked like he meant it.\"" },
+        { cls:'italic', t:"I didn't know yet that I was already in it. You never do, at the beginning." }
+      ], audio:{ pitch:80, tension:0.05, noiseAmt:0.08, color:400 } },
+      { label:'02 — The Grass', bh:'none', illus:null, blocks:[
+        { cls:'w', t:'She started texting me while sitting right in front of me.' },
+        { cls:'w', t:'Then she came over and sat beside me. We shared playlists. It was kind of cute.' }
+      ], full:[
+        { cls:'', t:"We were all sitting in a loose circle on the campus grass, one of those group things where nobody is quite a group yet. I was on my phone. She was directly across from me, maybe four metres away, definitely not looking at me." },
+        { cls:'', t:"My phone buzzed. Unknown number. The text said: \"what are you listening to?\"" },
+        { cls:'', t:"I looked up. She still wasn't looking at me. I texted back: \"how did you get this number.\" She texted: \"you gave it to me last week don't you remember\" — I didn't. Or maybe I did and forgot. Either way, it felt like a joke we were both in on." },
+        { cls:'', t:"Ten minutes later she got up, walked around the entire circle, and sat down next to me like it was the most natural thing. She put one earbud in my ear without asking. I still don't know what she was thinking. I hope it was something obvious." }
+      ], audio:{ pitch:90, tension:0.08, noiseAmt:0.06, color:350 } },
+      { label:'03 — The Concert', bh:'none', illus:null, blocks:[
+        { cls:'g', t:"Travis Scott's beats filled the air." },
+        { cls:'g', t:'We sang. Not just the words — the spaces between them.' },
+        { cls:'g', t:'We fell asleep connected.' },
+        { cls:'g', t:'Somewhere across the city. Still together.' }
+      ], full:[
+        { cls:'', t:"She'd been to the concert physically. I'd been listening at home, the same show, the same set, pirated livestream on a cracked laptop. We were texting the whole time. I'd say \"this drop\" and she'd say \"I KNOW\" before the drop even hit, because she was there two seconds ahead of me." },
+        { cls:'', t:"At some point after midnight we stopped talking about the music and just stayed on the line. She was in a cab going home. I was in bed. The call was still open — not because we had things to say, but because we both wanted the other person to be the last sound we heard." },
+        { cls:'italic', t:"\"Still there?\" she texted at 1:46 AM." },
+        { cls:'italic', t:"\"Still here,\" I sent back." },
+        { cls:'', t:"I don't know which of us fell asleep first. When I woke up at 5 AM the call was still connected, six hours of breathing and city noise and whatever dreams sound like over a phone speaker. I stayed still for a while, just listening. Then I quietly hung up." }
+      ], audio:{ pitch:110, tension:0.12, noiseAmt:0.07, color:300 } },
+      { label:'04 — The Bouquet', bh:'sz-1', illus:'flower', blocks:[
+        { cls:'w', t:'The satisfaction of seeing her smile when I handed her the bouquet was enough of a reward.' }
+      ], full:[
+        { cls:'', t:"It was her birthday and I'd spent three days deciding whether the gesture was too much. I went to three different florists. The first one had roses — too obvious. The second one had dahlias — too formal. The third one had white ranunculus and small dried things I didn't know the names of, and the woman behind the counter said they were for people who knew what they wanted without knowing why." },
+        { cls:'', t:"I wrapped them myself with brown paper and a piece of twine I found in a drawer. The bow was bad. I retied it four times. I left it bad." },
+        { cls:'', t:"She opened the door and I held them out and said something stupid like \"for the occasion\" and she looked at the flowers for a long time before she looked at me. Then she smiled — not the smile she gives people at parties. The other one. The smaller one." },
+        { cls:'italic', t:"I thought about that smile for weeks. I still think about it." },
+        { cls:'accent', t:"That was the moment I should have said something. I didn't. I told myself there was time." }
+      ], audio:{ pitch:130, tension:0.25, noiseAmt:0.10, color:280 } },
+      { label:'05 — November 22', bh:'sz-2', illus:null, blocks:[
+        { cls:'w', t:'She had a long list of questions.' },
+        { cls:'w', t:'I answered every question except one.' },
+        { cls:'g', t:'"What do you want us to be now?"' },
+        { cls:'w', t:"I teared up. I didn't have an answer." },
+        { cls:'r', t:"I don't think I can be with you. It hurts too much." }
+      ], full:[
+        { cls:'', t:"We'd been circling it for weeks. Maybe months. The kind of thing where you both know the conversation is coming and you each keep handing it off to tomorrow." },
+        { cls:'', t:"She made tea. There were twelve questions. She had actually written them down, on a folded piece of paper she kept smoothing flat on the table between us. I answered all of them honestly. The one about trust. The one about the summer. The one about whether I had been lying to myself the whole time." },
+        { cls:'', t:"Then she asked what I wanted us to be. She wasn't demanding. She was tired. There's a difference. I could see it — she just wanted an answer, any answer, something to navigate by." },
+        { cls:'italic', t:"I opened my mouth. Nothing came out. I felt my eyes fill up and I couldn't explain it because I wasn't sad, exactly. I was something without a name." },
+        { cls:'accent', t:"\"I don't think I can be with you,\" I finally said. \"It hurts too much.\" I meant: being this close to something I might lose is unbearable. What she heard was: you are too much. I didn't know that until later." }
+      ], audio:{ pitch:65, tension:0.55, noiseAmt:0.18, color:220 } },
+      { label:'06 — The Void', bh:'dead', illus:null, blocks:[
+        { cls:'w', t:'I love her, with every fiber of my being.' },
+        { cls:'w', t:'And I know she loves me too.' },
+        { cls:'w', t:'I just messed it all up.' }
+      ], full:[
+        { cls:'', t:"There is a specific kind of silence after. Not peaceful. Not heavy. Just absence, where something used to be." },
+        { cls:'', t:"I went back over everything. The shoes. The grass. The call that lasted all night. The flowers with the bad bow. I tried to find the moment I had made the wrong choice, and I kept finding it in different places, which means it wasn't one moment." },
+        { cls:'italic', t:"She had loved me clearly and I had loved her like it was something I had to protect her from." },
+        { cls:'', t:"I know she loves me. I'm not confused about that. She always showed me exactly what she felt. I was the one with the code no one could read." },
+        { cls:'accent', t:"I messed it all up is the simplest way to say it. The longer way takes too many pages and arrives at the same place." }
+      ], audio:{ pitch:50, tension:0.80, noiseAmt:0.25, color:180 } },
+    ],
+    2: [
+      { label:'01 — The Visit', bh:'none', illus:null, blocks:[
+        { cls:'w', t:"She came back on a Tuesday. I hadn't prepared anything." },
+        { cls:'w', t:'We sat on the same couch. The distance between us felt deliberate.' },
+        { cls:'g', t:'She asked how I was. I asked how she was.' },
+        { cls:'w', t:"Neither of us answered." }
+      ], full:[
+        { cls:'', t:"It had been five weeks since November 22. She texted the night before: \"Can I come by tomorrow?\" Just that. I said yes immediately. Then I spent the rest of the night cleaning things that didn't need cleaning." },
+        { cls:'', t:"She arrived at 3 in the afternoon. The winter light was already low. She was wearing a coat I hadn't seen before — navy, with big buttons. I noticed things like that now. New things she'd acquired in the gap." },
+        { cls:'', t:"We sat on the couch at opposite ends. Not fighting distance — more like two people who used to be close and are now trying to remember how close was appropriate. She put her bag on the cushion between us. I think it was unconscious." },
+        { cls:'italic', t:"How are you, she asked. How are you, I asked. We both said fine. We both meant something else. The kettle boiled and I got up to make tea just to have somewhere to be." }
+      ], audio:{ pitch:85, tension:0.2, noiseAmt:0.12, color:320 } },
+      { label:'02 — The Goodbye', bh:'sz-1', illus:null, blocks:[
+        { cls:'w', t:'She stood at the door for a long time.' },
+        { cls:'g', t:"I don't know why I didn't say anything." },
+        { cls:'w', t:'She left without turning around. That was worse.' },
+        { cls:'r', t:'I watched until she turned the corner.' }
+      ], full:[
+        { cls:'', t:"She'd stayed two hours. We talked about things that didn't matter — a show she was watching, a problem at her university, someone in her course who reminded her of a person we both knew. It was almost normal. Almost the old kind of normal, from before." },
+        { cls:'', t:"Then she picked up her bag and said she should go, and I walked her to the door and we stood there in the hallway under that one light that flickers." },
+        { cls:'', t:"She was looking at the floor, or maybe the door handle. She had her coat buttoned up already. I had at least four sentences ready. I don't know what stopped them. Some fear I couldn't name — of making it worse, of making it real, of being wrong about what she wanted." },
+        { cls:'italic', t:"She opened the door. She didn't say anything either. Then she was outside, and she didn't look back, not at the door, not at the end of the path, not at the corner." },
+        { cls:'accent', t:"Not turning back is its own kind of answer. I knew that. I stood there until she was gone and then I stayed in the doorway a little longer, waiting for something that didn't come." }
+      ], audio:{ pitch:70, tension:0.45, noiseAmt:0.16, color:250 } },
+      { label:'03 — The Return', bh:'none', illus:null, blocks:[
+        { cls:'w', t:'Three weeks later, she texted.' },
+        { cls:'w', t:'Just one line. I read it seventeen times.' },
+        { cls:'g', t:"I still think about you." },
+        { cls:'w', t:"I didn't know if that was a gift or a wound." }
+      ], full:[
+        { cls:'', t:"It came on a Wednesday. Not late — 11:40 AM, like she'd been thinking about it during the morning and finally sent it. I was in the middle of something and my phone lit up with her name and the whole room changed density." },
+        { cls:'italic', t:"\"I still think about you.\"" },
+        { cls:'', t:"I read it. Then I put the phone face-down for four minutes. Then I picked it up and read it again. Then I opened it to reply and closed it. Then I read it eleven more times over the course of the afternoon, each time looking for the thing underneath the thing — was it reconciliation, or closure, or just truth without agenda?" },
+        { cls:'', t:"I didn't reply that day. I drafted seven things. One of them was honest. One of them was kind. None of them were both." },
+        { cls:'accent', t:"A wound and a gift are sometimes the same object held in different hands. I still don't know which hand I was holding it in." }
+      ], audio:{ pitch:95, tension:0.15, noiseAmt:0.09, color:340 } },
+    ],
+    3: [
+      { label:'01 — The Call', bh:'none', illus:null, blocks:[
+        { cls:'w', t:'She called at 2am. I knew before I answered.' },
+        { cls:'g', t:'Her voice was different. Quieter. Far away.' },
+        { cls:'w', t:"We talked for two hours. We said things we'd been carrying." }
+      ], full:[
+        { cls:'', t:"February. The kind of night where everything outside has already gone to sleep and you're the only light left on. My phone rang at 2:14 AM and it was her name and I sat up before I answered, like a body bracing." },
+        { cls:'', t:"Her voice was different. Not sad in the way I'd expected — quieter than that, further away, like she was calling from somewhere inside herself rather than from a physical location." },
+        { cls:'', t:"We talked about everything and we talked about nothing and eventually we talked about the couch visit and the door and November 22 and the concert in September and the flowers with the bad bow. We went back through all of it, slowly, like going through a place after a long time away." },
+        { cls:'italic', t:"At some point I said I was sorry. She said she knew. She said she'd known for a while." },
+        { cls:'', t:"At 4:08 AM she said she needed to sleep. I said okay. Neither of us hung up for another six minutes." }
+      ], audio:{ pitch:60, tension:0.6, noiseAmt:0.2, color:200 } },
+      { label:'02 — The Truth', bh:'sz-2', illus:null, blocks:[
+        { cls:'w', t:"She said she never stopped loving me." },
+        { cls:'w', t:"She said it was never about not loving me." },
+        { cls:'g', t:'"It was about surviving you."' },
+        { cls:'w', t:"I understood. I didn't want to, but I understood." }
+      ], full:[
+        { cls:'', t:"That was the hardest sentence. Not because it was cruel — it wasn't cruel. Because it was precise." },
+        { cls:'', t:"She explained: loving someone who can't let themselves be loved is its own kind of grief. You pour it in and it goes somewhere you can't see. You keep thinking it's not enough, that you're doing it wrong, that if you found the right angle the door would open. And eventually you start to disappear into the attempt." },
+        { cls:'italic', t:"\"It was about surviving you,\" she said. \"Surviving loving you.\"" },
+        { cls:'', t:"I listened to this and I knew it was true. I had known it in a wordless way for a long time, the way you know a thing before you can say it." },
+        { cls:'accent', t:"Understanding is not the same as fixing. I understood everything she said. I still didn't know how to become the version of myself that wouldn't have made it necessary." }
+      ], audio:{ pitch:55, tension:0.7, noiseAmt:0.22, color:190 } },
+      { label:'03 — The Last Time', bh:'dead', illus:null, blocks:[
+        { cls:'w', t:'We agreed to meet one last time.' },
+        { cls:'w', t:'Same place. Same bench. It wasn\'t the same.' },
+        { cls:'g', t:'"This is the goodbye I always wanted us to have."' },
+        { cls:'w', t:'And then she was gone.' },
+        { cls:'r', t:'And I let her go.' }
+      ], full:[
+        { cls:'', t:"The bench was in the park near where we'd first sat together in September. She was already there when I arrived. She had coffee — two cups. She handed me mine without asking what I wanted, and I thought: she still knows." },
+        { cls:'', t:"We sat for a long time before either of us spoke. The park was cold and quiet and a dog ran past and we both watched it until it was gone." },
+        { cls:'', t:"She said she didn't want it to end the way it had — with doors and silence and things unsaid. She said she'd spent a long time thinking about what she deserved, and she'd decided she deserved a real ending, not a disappearance." },
+        { cls:'italic', t:"\"This is the goodbye I always wanted us to have,\" she said. Not sad. Clear." },
+        { cls:'', t:"We stayed another hour. We said good things. True things. We hugged at the gate — a long one, the kind that's really a complete sentence." },
+        { cls:'accent', t:"She walked away. I watched. And for the first time, I let her go — not because I had to. Because she deserved to be let go gently." }
+      ], audio:{ pitch:45, tension:0.85, noiseAmt:0.28, color:170 } },
+    ]
+  };
 
-    // Scene audio configs
-    // pitch: base frequency in Hz
-    // tension: 0=calm, 1=tense
-    // noiseAmt: how much noise (0-1)
-    // color: LP filter cutoff for noise
-    var SCENE_AUDIO = [
-      { pitch: 80,  tension: 0.05, noiseAmt: 0.08, color: 400  },  // sc0: September — quiet anticipation
-      { pitch: 90,  tension: 0.08, noiseAmt: 0.06, color: 350  },  // sc1: Grass — gentle warmth
-      { pitch: 110, tension: 0.12, noiseAmt: 0.07, color: 300  },  // sc2: Concert — intimate, slight tension
-      { pitch: 130, tension: 0.25, noiseAmt: 0.10, color: 280  },  // sc3: Bouquet — sweetness with unease
-      { pitch: 65,  tension: 0.55, noiseAmt: 0.18, color: 220  },  // sc4: Nov22 — heavy, oppressive
-      { pitch: 50,  tension: 0.80, noiseAmt: 0.25, color: 180  },  // sc5: Void — hollow, fading
-    ];
+  const illustHTML = {
+    flower: '<svg class="illus" id="flower-svg" viewBox="0 0 120 200" fill="none">' +
+      '<line x1="60" y1="200" x2="60" y2="100" stroke-width="1.5"/>' +
+      '<path d="M60 150 Q42 140 35 150 Q42 160 60 152" stroke-width="1"/>' +
+      '<path d="M60 165 Q78 155 85 165 Q78 175 60 167" stroke-width="1"/>' +
+      '<ellipse cx="60" cy="72" rx="12" ry="22" stroke-width="1.2"/>' +
+      '<ellipse cx="82" cy="82" rx="12" ry="22" stroke-width="1.2" transform="rotate(72 60 100)"/>' +
+      '<ellipse cx="76" cy="108" rx="12" ry="22" stroke-width="1.2" transform="rotate(144 60 100)"/>' +
+      '<ellipse cx="44" cy="108" rx="12" ry="22" stroke-width="1.2" transform="rotate(-144 60 100)"/>' +
+      '<ellipse cx="38" cy="82" rx="12" ry="22" stroke-width="1.2" transform="rotate(-72 60 100)"/>' +
+      '<circle cx="60" cy="100" r="10" stroke-width="1.2"/>' +
+      '<circle cx="60" cy="100" r="4" fill="currentColor" fill-opacity="0.15"/>' +
+      '</svg>',
+    shoes: '<svg class="illus" id="shoes-svg" viewBox="0 0 240 90" fill="none">' +
+      '<ellipse cx="52" cy="52" rx="42" ry="18" stroke-width="1.4"/>' +
+      '<ellipse cx="52" cy="46" rx="42" ry="14" stroke-width="1.4"/>' +
+      '<line x1="30" y1="38" x2="74" y2="38" stroke-width="1"/>' +
+      '<line x1="32" y1="38" x2="32" y2="32" stroke-width="1"/><line x1="42" y1="38" x2="42" y2="32" stroke-width="1"/><line x1="52" y1="38" x2="52" y2="32" stroke-width="1"/><line x1="62" y1="38" x2="62" y2="32" stroke-width="1"/>' +
+      '<ellipse cx="188" cy="52" rx="42" ry="18" stroke-width="1.4"/>' +
+      '<ellipse cx="188" cy="46" rx="42" ry="14" stroke-width="1.4"/>' +
+      '<line x1="166" y1="38" x2="210" y2="38" stroke-width="1"/>' +
+      '<line x1="168" y1="38" x2="168" y2="32" stroke-width="1"/><line x1="178" y1="38" x2="178" y2="32" stroke-width="1"/><line x1="188" y1="38" x2="188" y2="32" stroke-width="1"/><line x1="198" y1="38" x2="198" y2="32" stroke-width="1"/>' +
+      '</svg>'
+  };
 
-    function init() {
-      if (initialized) return;
-      try {
-        ctx = new (window.AudioContext || window.webkitAudioContext)();
-        master = ctx.createGain();
-        master.gain.value = 0;
-        master.connect(ctx.destination);
-        // Fade master in over 2 seconds
-        master.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 2);
+  let volKey = 1;
+  let current = 0;
+  let entries = [];
+  let TOTAL = 0;
+  let audioOn = false;
+  let isTransitioning = false;
+  let isMenuOpen = false;
+  let isOrbSelecting = false;
+  let hasStarted = false;
 
-        // Create 3 layered drones (sine waves, slightly detuned)
-        for (var i = 0; i < 3; i++) {
-          var osc = ctx.createOscillator();
-          var g = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.value = 80 * (i === 1 ? 1.003 : i === 2 ? 0.997 : 1);
-          g.gain.value = 0;
-          osc.connect(g);
-          g.connect(master);
-          osc.start();
-          droneOsc.push(osc);
-          droneGain.push(g);
-        }
+  const stageEl = document.getElementById('stage');
+  const promptEl = document.getElementById('prompt');
+  const counterEl = document.getElementById('counter');
+  const volTagEl = document.getElementById('vol-tag');
+  const orbMenu = document.getElementById('orb-menu');
+  const topbar = document.getElementById('topbar');
 
-        // Noise via white noise buffer
-        var bufLen = ctx.sampleRate * 4;
-        var buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-        var data = buf.getChannelData(0);
-        for (var j = 0; j < bufLen; j++) data[j] = (Math.random() * 2 - 1) * 0.3;
+  /* ── Orb Parallax Physics ──────────────────────────────────────── */
+  let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+  let targetMouseX = mouseX, targetMouseY = mouseY;
+  let physicsId;
+  let physicsTime = 0;
 
-        noiseNode = ctx.createBufferSource();
-        noiseNode.buffer = buf;
-        noiseNode.loop = true;
+  document.addEventListener('mousemove', e => { targetMouseX = e.clientX; targetMouseY = e.clientY; });
+  document.addEventListener('touchmove', e => { targetMouseX = e.touches[0].clientX; targetMouseY = e.touches[0].clientY; });
 
-        var noiseFilter = ctx.createBiquadFilter();
-        noiseFilter.type = 'lowpass';
-        noiseFilter.frequency.value = 400;
-        noiseFilter.Q.value = 0.5;
+  function runPhysics() {
+    if (!isMenuOpen || isOrbSelecting) return;
+    physicsTime += 0.016;
+    
+    // Smooth trailing lerp for "heavy" feel
+    mouseX += (targetMouseX - mouseX) * 0.04;
+    mouseY += (targetMouseY - mouseY) * 0.04;
 
-        var noiseGain = ctx.createGain();
-        noiseGain.gain.value = 0;
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const orbs = document.querySelectorAll('.orb-wrapper');
+    
+    orbs.forEach((ow, i) => {
+      // If expanding to center, skip physics for that orb
+      if (ow.classList.contains('selected')) return;
 
-        noiseNode.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(master);
-        noiseNode.start();
+      const depth = 1 + (i * 0.6); // Further orbs move more
+      const dx = (mouseX - cx) * -0.04 * depth;
+      const dy = (mouseY - cy) * -0.04 * depth;
+      const floatY = Math.sin(physicsTime * 1.5 + i * 2) * 12;
+      const floatX = Math.cos(physicsTime * 1.2 + i * 2) * 8;
+      
+      ow.style.setProperty('--px', `${dx + floatX}px`);
+      ow.style.setProperty('--py', `${dy + floatY}px`);
+    });
 
-        // Store for crossfading
-        noiseNode._gain = noiseGain;
-        noiseNode._filter = noiseFilter;
+    physicsId = requestAnimationFrame(runPhysics);
+  }
 
-        // Initialize drone gains
-        droneGain[0].gain.value = 1;
-        droneGain[1].gain.value = 0.6;
-        droneGain[2].gain.value = 0.4;
+  /* ── Volumes 3D Menu Handlers ──────────────────────────────────── */
+  window.openVolumes = function() {
+    AudioEngine.silence(); // Explicitly silence on open
+    isMenuOpen = true;
+    document.body.classList.add('in-menu');
+    orbMenu.classList.add('active');
+    document.querySelector('.orb-menu-nav').style.opacity = '1';
+    
+    // Reset orbs from any previous selections
+    document.querySelectorAll('.orb-wrapper').forEach(ow => {
+      ow.classList.remove('selected', 'fade-out');
+      ow.querySelector('.orb-label').style.opacity = 1;
+    });
+    
+    runPhysics();
+  };
 
-        initialized = true;
+  window.closeVolumes = function() {
+    isMenuOpen = false;
+    cancelAnimationFrame(physicsId);
+    document.body.classList.remove('in-menu');
+    orbMenu.classList.remove('active');
+    
+    // Explicitly restore audio if it was on
+    if (audioOn) {
+      AudioEngine.init();
+      AudioEngine.apply(entries[current].audio);
+    }
+  };
 
-        // Apply initial scene
-        applyScene(0);
-      } catch (e) {
-        // Audio not supported
+  window.closeVolumes = function() {
+    isMenuOpen = false;
+    cancelAnimationFrame(physicsId);
+    document.body.classList.remove('in-menu');
+    orbMenu.classList.remove('active');
+    if (audioOn) AudioEngine.apply(entries[current].audio);
+  };
+
+  window.selectVolume = function(key) {
+    if (!isMenuOpen || isOrbSelecting) return;
+    isOrbSelecting = true;
+    hasStarted = true;
+    
+    const selectedWrapper = document.querySelector(`.ow-${key}`);
+    const nav = document.querySelector('.orb-menu-nav');
+    nav.style.opacity = '0';
+    nav.style.pointerEvents = 'none';
+
+    // Fade out unselected elements
+    document.querySelectorAll('.orb-wrapper').forEach(ow => {
+      ow.querySelector('.orb-label').style.opacity = 0;
+      if (ow !== selectedWrapper) ow.classList.add('fade-out');
+    });
+
+    // Expand the selected orb infinitely using CSS width/height native expansion
+    selectedWrapper.classList.add('selected');
+
+    // Wait for the orb to fully swallow the viewport
+    setTimeout(() => {
+      loadVolume(key, 0);
+
+      // Smoothly fade out the expanded menu to reveal the exact same color underneath it
+      orbMenu.style.transition = 'opacity 1s ease';
+      orbMenu.classList.remove('active');
+      document.body.classList.remove('in-menu');
+
+      // Cleanup logic behind the scenes after the fade is complete
+      setTimeout(() => {
+        selectedWrapper.classList.remove('selected');
+        orbMenu.style.transition = '';
+        isOrbSelecting = false;
+        isMenuOpen = false;
+        cancelAnimationFrame(physicsId);
+      }, 1200);
+      
+    }, 1500);
+  };
+
+  /* ── Initialization & Content Logic ────────────────────────────── */
+  function loadVolume(key, startIdx = 0) {
+    isTransitioning = false;
+    volKey = key;
+    entries = VOL[volKey];
+    TOTAL = entries.length;
+    current = startIdx;
+
+    document.body.className = VOL_INFO[volKey].theme;
+    if(window.__gol) window.__gol.updateColor();
+
+    stageEl.innerHTML = '';
+    entries.forEach((entry, i) => {
+      const div = document.createElement('div');
+      div.className = 'entry';
+      div.id = 'e' + i;
+      const lbl = document.createElement('p');
+      lbl.className = 'lbl block';
+      lbl.textContent = entry.label;
+      div.appendChild(lbl);
+      
+      entry.blocks.forEach(b => {
+        const p = document.createElement('p');
+        p.className = `${b.cls} block`;
+        p.textContent = b.t;
+        div.appendChild(p);
+      });
+      if (entry.illus) div.insertAdjacentHTML('beforeend', illustHTML[entry.illus]);
+
+      // --- Full Entry Panel ---
+      if (entry.full && entry.full.length) {
+        const fullPanel = document.createElement('div');
+        fullPanel.className = 'entry-full';
+        fullPanel.innerHTML = `<button class="full-collapse" onclick="collapseFullPanel(event)">↑ close</button>
+          <p class="full-label">${entry.label}</p>`;
+        entry.full.forEach(para => {
+          const p = document.createElement('p');
+          p.className = 'full-para' + (para.cls ? ' ' + para.cls : '');
+          p.textContent = para.t;
+          fullPanel.appendChild(p);
+        });
+        fullPanel.insertAdjacentHTML('beforeend', '<p class="full-scroll-hint">scroll · click to continue</p>');
+        div.appendChild(fullPanel);
+      }
+
+      stageEl.appendChild(div);
+    });
+
+    document.getElementById('curtain').classList.remove('up');
+    enterEntry(current, true);
+  }
+
+  /* ── Full Panel: Collapse ────────────────────────────────────────── */
+  window.collapseFullPanel = function(e) {
+    e.stopPropagation();
+    const activeEntry = document.getElementById('e' + current);
+    if (!activeEntry) return;
+    const fullPanel = activeEntry.querySelector('.entry-full');
+    if (fullPanel) {
+      fullPanel.classList.remove('revealed');
+      activeEntry.classList.remove('excerpt-dimmed');
+      document.body.classList.remove('in-full-view');
+      if (audioOn) AudioEngine.unduck();
+      // Re-fade in excerpt blocks
+      activeEntry.querySelectorAll('.block, .illus').forEach(el => {
+        el.style.opacity = '';
+        el.style.transform = '';
+      });
+    }
+  };
+
+  /* ── Full Panel: Reveal / Dismiss on scroll & touch ─────────────── */
+  let fullViewOpen = false;
+  let scrollCooldown = false;
+  let touchStartY = 0;
+
+  function openFullPanel() {
+    const activeEntry = document.getElementById('e' + current);
+    if (!activeEntry) return;
+    const fullPanel = activeEntry.querySelector('.entry-full');
+    if (!fullPanel || fullPanel.classList.contains('revealed')) return;
+
+    fullPanel.classList.add('revealed');
+    activeEntry.classList.add('excerpt-dimmed');
+    document.body.classList.add('in-full-view');
+    fullViewOpen = true;
+    if (audioOn) AudioEngine.duck();
+
+    // Stagger the full-para elements in
+    const paras = fullPanel.querySelectorAll('.full-para');
+    paras.forEach((p, i) => {
+      setTimeout(() => p.classList.add('in'), 180 + i * 160);
+    });
+  }
+
+  function closeFullPanel() {
+    const activeEntry = document.getElementById('e' + current);
+    if (!activeEntry) return;
+    const fullPanel = activeEntry.querySelector('.entry-full');
+    if (!fullPanel) return;
+    fullPanel.classList.remove('revealed');
+    activeEntry.classList.remove('excerpt-dimmed');
+    document.body.classList.remove('in-full-view');
+    fullViewOpen = false;
+    if (audioOn) AudioEngine.unduck();
+    activeEntry.querySelectorAll('.block, .illus').forEach(el => {
+      el.style.opacity = '';
+      el.style.transform = '';
+    });
+  }
+
+  function handleScrollIntent(direction) {
+    if (scrollCooldown || isTransitioning || isMenuOpen || isOrbSelecting) return;
+
+    scrollCooldown = true;
+    setTimeout(() => { scrollCooldown = false; }, 600);
+
+    const entry = entries[current];
+    const hasFullContent = entry && entry.full && entry.full.length;
+
+    if (direction === 'down') {
+      if (hasFullContent && !fullViewOpen) {
+        openFullPanel();
+      } else {
+        if (fullViewOpen) { closeFullPanel(); setTimeout(() => advance(), 350); }
+        else advance();
+      }
+    } else if (direction === 'up') {
+      if (fullViewOpen) closeFullPanel();
+    } else if (direction === 'advance') {
+      // From bottom of full panel
+      closeFullPanel();
+      setTimeout(() => advance(), 350);
+    }
+  }
+
+  // Wheel
+  let wheelAccum = 0;
+  document.addEventListener('wheel', e => {
+    if (isMenuOpen || isOrbSelecting) return;
+    if (e.target.closest('.overlay') || e.target.closest('#orb-menu')) return;
+    // If full panel is open and scrollable, let it scroll naturally
+    const activeEntry = document.getElementById('e' + current);
+    if (activeEntry) {
+      const fullPanel = activeEntry.querySelector('.entry-full.revealed');
+      if (fullPanel) {
+        const atBottom = fullPanel.scrollTop + fullPanel.clientHeight >= fullPanel.scrollHeight - 4;
+        const atTop = fullPanel.scrollTop <= 0;
+        if (e.deltaY > 0 && !atBottom) return; // let panel scroll
+        if (e.deltaY < 0 && !atTop) return;
+        if (e.deltaY < 0 && atTop) { e.preventDefault(); handleScrollIntent('up'); return; }
+        if (e.deltaY > 0 && atBottom) { e.preventDefault(); handleScrollIntent('advance'); return; }
       }
     }
+    wheelAccum += e.deltaY;
+    if (Math.abs(wheelAccum) > 60) {
+      handleScrollIntent(wheelAccum > 0 ? 'down' : 'up');
+      wheelAccum = 0;
+    }
+  }, { passive: false });
 
-    function applyScene(idx) {
-      if (!initialized || !ctx) return;
-      var cfg = SCENE_AUDIO[idx];
-      var now = ctx.currentTime;
-      var dur = 3.5; // crossfade duration
+  // Touch swipe
+  document.addEventListener('touchstart', e => {
+    if (isMenuOpen || isOrbSelecting) return;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
 
-      // Drone pitch — each layer at different harmonics
-      droneOsc[0].frequency.linearRampToValueAtTime(cfg.pitch,         now + dur);
-      droneOsc[1].frequency.linearRampToValueAtTime(cfg.pitch * 1.498, now + dur); // perfect fifth
-      droneOsc[2].frequency.linearRampToValueAtTime(cfg.pitch * 2.0,   now + dur); // octave
+  document.addEventListener('touchend', e => {
+    if (isMenuOpen || isOrbSelecting) return;
+    if (e.target.closest('.overlay') || e.target.closest('#orb-menu')) return;
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) < 40) return; // too small — treat as tap
+    handleScrollIntent(dy > 0 ? 'down' : 'up');
+  }, { passive: true });
 
-      // Drone volume — tension increases lower drone, relaxes others
-      var droneVol = 0.4 + cfg.tension * 0.5;
-      droneGain[0].gain.linearRampToValueAtTime(droneVol,            now + dur);
-      droneGain[1].gain.linearRampToValueAtTime(droneVol * 0.55,      now + dur);
-      droneGain[2].gain.linearRampToValueAtTime(droneVol * 0.3,      now + dur);
 
-      // Noise — rises with tension
-      var noiseVol = cfg.noiseAmt;
-      noiseNode._gain.gain.linearRampToValueAtTime(noiseVol, now + dur);
 
-      // Filter cutoff — tense = darker (lower), calm = brighter
-      var cutoff = cfg.color - cfg.tension * 100;
-      noiseNode._filter.frequency.linearRampToValueAtTime(cutoff, now + dur);
+  window.openSelector = function() {
+    const ov = document.getElementById('sel-overlay');
+    ov.classList.add('show');
+    document.getElementById('sel-title').textContent = VOL_INFO[volKey].name;
+    document.getElementById('sel-sub').textContent = VOL_INFO[volKey].sub;
+    const list = document.getElementById('sel-list');
+    list.innerHTML = '';
+    entries.forEach((e, i) => {
+      const b = document.createElement('div');
+      b.className = 'sel-entry' + (i === current ? ' current' : '');
+      const parts = e.label.split('—');
+      b.innerHTML = `<span class="sel-e-num">${parts[0].trim()}</span><span class="sel-e-name">${parts.slice(1).join('—').trim()}</span><span class="sel-e-dot"></span>`;
+      b.onclick = () => { closeOverlay('sel-overlay'); goEntry(i); };
+      list.appendChild(b);
+    });
+  };
 
-      // Master volume breathes slightly with tension
-      var masterVol = 0.15 + cfg.tension * 0.08;
-      master.gain.linearRampToValueAtTime(masterVol, now + dur);
+  window.closeOverlay = function(id) {
+    const ov = document.getElementById(id);
+    ov.classList.add('hide');
+    setTimeout(() => { ov.classList.remove('hide', 'show'); }, 400);
+  };
+
+  function goEntry(idx) {
+    if (idx === current || isTransitioning) return;
+    isTransitioning = true;
+    document.querySelectorAll('.block, .illus').forEach(el => el.classList.remove('in'));
+    const currEl = document.getElementById('e' + current);
+    if(currEl) currEl.classList.remove('active');
+    setTimeout(() => { enterEntry(idx); isTransitioning = false; }, 500);
+  }
+
+  /* ── Audio Engine (Web Audio API) ─────────────────────────────── */
+  const AudioEngine = (function() {
+    let ctx = null, master = null, duckGain = null, init = false;
+    let droneOsc = [], droneGain = [], noiseNode = null;
+    let breathLFO = null, vibratoLFO = null, vibratoGain = null;
+    let baseMasterLevel = 0.18;
+
+    function initialize() {
+      if (init) return;
+      try {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Signal chain: oscillators -> droneGain -> duckGain -> master -> destination
+        master   = ctx.createGain(); master.gain.value   = 0;   master.connect(ctx.destination);
+        duckGain = ctx.createGain(); duckGain.gain.value = 1.0; duckGain.connect(master);
+
+        // Breath LFO: slow volume swell (~18s cycle, ±6%)
+        breathLFO = ctx.createOscillator();
+        breathLFO.type = 'sine';
+        breathLFO.frequency.value = 0.055;
+        const breathDepth = ctx.createGain();
+        breathDepth.gain.value = 0.06;
+        breathLFO.connect(breathDepth);
+        breathDepth.connect(master.gain);
+        breathLFO.start();
+
+        // Vibrato LFO: very slow pitch drift (~8s cycle)
+        vibratoLFO  = ctx.createOscillator();
+        vibratoLFO.type = 'sine';
+        vibratoLFO.frequency.value = 0.12;
+        vibratoGain = ctx.createGain();
+        vibratoGain.gain.value = 0;
+        vibratoLFO.connect(vibratoGain);
+        vibratoLFO.start();
+
+        // Three drone oscillators
+        const ratios  = [1, 1.498, 2.0];
+        const detunes = [1, 1.003, 0.997];
+        for (let i = 0; i < 3; i++) {
+          let osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = 80 * ratios[i] * detunes[i];
+          g.gain.value = 0;
+          vibratoGain.connect(osc.frequency);
+          osc.connect(g); g.connect(duckGain);
+          osc.start();
+          droneOsc.push(osc); droneGain.push(g);
+        }
+        droneGain[0].gain.value = 1; droneGain[1].gain.value = 0.6; droneGain[2].gain.value = 0.4;
+
+        // Noise layer
+        let buf = ctx.createBuffer(1, ctx.sampleRate * 4, ctx.sampleRate);
+        let d = buf.getChannelData(0);
+        for (let j = 0; j < d.length; j++) d[j] = (Math.random() * 2 - 1) * 0.3;
+        noiseNode = ctx.createBufferSource(); noiseNode.buffer = buf; noiseNode.loop = true;
+        let nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 400; nf.Q.value = 0.5;
+        let ng = ctx.createGain(); ng.gain.value = 0;
+        noiseNode.connect(nf); nf.connect(ng); ng.connect(duckGain); noiseNode.start();
+        noiseNode._gain = ng; noiseNode._filter = nf;
+
+        master.gain.setTargetAtTime(baseMasterLevel, ctx.currentTime, 1.0);
+        init = true;
+      } catch(e) { console.warn("Web Audio API not supported"); }
+    }
+
+    function applyState(cfg) {
+      if (!init || !ctx) return;
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const now = ctx.currentTime + 0.1, timeConst = 1.5;
+      const pitchMult = cfg.pitch * 3.0;
+      droneOsc[0].frequency.setTargetAtTime(pitchMult,         now, timeConst);
+      droneOsc[1].frequency.setTargetAtTime(pitchMult * 1.498, now, timeConst);
+      droneOsc[2].frequency.setTargetAtTime(pitchMult * 2.0,   now, timeConst);
+      vibratoGain.gain.setTargetAtTime(pitchMult * 0.004, now, timeConst);
+
+      const dv = 0.4 + cfg.tension * 0.5;
+      droneGain[0].gain.setTargetAtTime(dv,        now, timeConst);
+      droneGain[1].gain.setTargetAtTime(dv * 0.55, now, timeConst);
+      droneGain[2].gain.setTargetAtTime(dv * 0.3,  now, timeConst);
+      noiseNode._gain.gain.setTargetAtTime(cfg.noiseAmt, now, timeConst);
+      noiseNode._filter.frequency.setTargetAtTime(Math.max(100, cfg.color - cfg.tension * 100), now, timeConst);
+
+      baseMasterLevel = 0.15 + cfg.tension * 0.08;
+      master.gain.setTargetAtTime(baseMasterLevel, now, timeConst);
+    }
+
+    function duck() {
+      if (!init || !ctx || !duckGain) return;
+      duckGain.gain.setTargetAtTime(0.55, ctx.currentTime, 0.6);
+    }
+
+    function unduck() {
+      if (!init || !ctx || !duckGain) return;
+      duckGain.gain.setTargetAtTime(1.0, ctx.currentTime, 0.8);
     }
 
     function silence() {
-      if (!initialized || !ctx || !master) return;
-      master.gain.linearRampToValueAtTime(0, ctx.currentTime + 4);
+      if (!init || !ctx || !master) return;
+      master.gain.setTargetAtTime(0, ctx.currentTime, 1.5);
     }
 
-    return { init: init, applyScene: applyScene, silence: silence };
+    return { init: initialize, apply: applyState, duck, unduck, silence };
   })();
 
-  /* ═══════════════════════════════════════════════════════════════════════
-     SCENE SEQUENCE
-     ═══════════════════════════════════════════════════════════════════════ */
-  var SCENES = [
-    { id: 'sc0', gol: 'normal', bh: 'none',  illus: 'shoes-svg'  },
-    { id: 'sc1', gol: 'normal', bh: 'none',  illus: null         },
-    { id: 'sc2', gol: 'normal', bh: 'none',  illus: null         },
-    { id: 'sc3', gol: 'normal', bh: 'sz-1',  illus: 'flower-svg' },
-    { id: 'sc4', gol: 'dying',  bh: 'sz-2',  illus: null         },
-    { id: 'sc5', gol: 'glider', bh: 'dead',  illus: null         },
-  ];
+  /* ── Narrative Progression ──────────────────────────────────────── */
+  function updateUI() {
+    counterEl.textContent = `${current + 1} / ${TOTAL}`;
+    volTagEl.textContent = `Vol. ${volKey} — ${VOL_INFO[volKey].name}`;
+  }
 
-  var currentScene = 0;
-  var promptEl  = document.getElementById('prompt');
-  var audioNote = document.getElementById('audio-note');
+  function enterEntry(idx, immediate = false) {
+    if (idx >= TOTAL) return;
+    current = idx;
+    const entry = entries[idx];
+    const bh = document.getElementById('bh');
+    bh.className = entry.bh !== 'none' ? entry.bh : '';
 
-  function enterScene(idx) {
-    currentScene = idx;
-    var sc = SCENES[idx];
+    if (audioOn && entry.audio) AudioEngine.apply(entry.audio);
 
-    // Progress dots
-    document.querySelectorAll('.pdot').forEach(function (d, i) {
-      d.classList.remove('active', 'done');
-      if (i < idx) d.classList.add('done');
-      else if (i === idx) d.classList.add('active');
-    });
-
-    // Switch scene
-    document.querySelectorAll('.scene').forEach(function (s) { s.classList.remove('active'); });
-    document.getElementById(sc.id).classList.add('active');
-
-    // Black hole
-    var bh = document.getElementById('bh');
-    bh.className = '';
-    if (sc.bh !== 'none') bh.classList.add(sc.bh);
-
-    // Game of Life
-    if (window.__gol) window.__gol.setMode(sc.gol);
-
-    // Audio crossfade
-    Audio.applyScene(idx);
-
-    // Fade out illustrations
-    document.querySelectorAll('.illus').forEach(function (el) { el.classList.remove('in'); });
-    document.querySelectorAll('#' + sc.id + ' .block').forEach(function (b) { b.classList.remove('in'); });
-
-    // Fade in blocks with stagger
-    var blocks = document.getElementById(sc.id).querySelectorAll('.block');
-    blocks.forEach(function (b, i) {
-      setTimeout(function () { b.classList.add('in'); }, 200 + i * 380);
-    });
-
-    // Fade in illustration
-    if (sc.illus) {
-      setTimeout(function () {
-        document.getElementById(sc.illus).classList.add('in');
-      }, 200 + blocks.length * 380 + 200);
+    if (window.__gol) {
+      let gm = 'normal';
+      if (idx === TOTAL - 1) gm = 'glider';
+      else if (idx === TOTAL - 2) gm = 'dying';
+      window.__gol.setMode(gm);
     }
 
-    // Show prompt after everything fades in
+    document.querySelectorAll('.entry').forEach(e => e.classList.remove('active', 'excerpt-dimmed'));
+    document.body.classList.remove('in-full-view');
+    fullViewOpen = false;
+    if (audioOn) AudioEngine.unduck();
+
+    // Reset any open full panels
+    document.querySelectorAll('.entry-full').forEach(fp => {
+      fp.classList.remove('revealed');
+      fp.scrollTop = 0;
+      fp.querySelectorAll('.full-para').forEach(p => p.classList.remove('in'));
+    });
+
+    const activeEntry = document.getElementById('e' + idx);
+    activeEntry.classList.add('active');
+
+    document.querySelectorAll('.block, .illus').forEach(el => {
+      el.classList.remove('in');
+      el.style.opacity = '';
+      el.style.transform = '';
+    });
+    const blocks = activeEntry.querySelectorAll('.block');
+    blocks.forEach((b, i) => { setTimeout(() => { b.classList.add('in'); }, immediate ? i*100 : 200 + i * 380); });
+
+    if (entry.illus) {
+      const illusEl = entry.illus === 'flower' ? document.getElementById('flower-svg') : document.getElementById('shoes-svg');
+      if (illusEl) setTimeout(() => { illusEl.classList.add('in'); }, immediate ? 500 : 200 + blocks.length * 380 + 300);
+    }
+
+    updateUI();
     promptEl.classList.add('hidden');
-    var illusDelay = sc.illus ? 200 + blocks.length * 380 + 1400 : 0;
-    setTimeout(function () { promptEl.classList.remove('hidden'); }, 200 + blocks.length * 380 + illusDelay + 500);
+    const illusDelay = entry.illus ? 1600 : 0;
+    setTimeout(() => { promptEl.classList.remove('hidden'); }, immediate ? 1000 : 200 + blocks.length * 380 + illusDelay + 500);
   }
 
   function advance() {
-    var sceneEl = document.getElementById(SCENES[currentScene].id);
-    sceneEl.querySelectorAll('.block').forEach(function (b) { b.classList.remove('in'); });
-    sceneEl.querySelectorAll('.illus').forEach(function (el) { el.classList.remove('in'); });
+    if (isTransitioning || isMenuOpen || isOrbSelecting) return;
+    const activeEntry = document.getElementById('e' + current);
+    if (!activeEntry) return;
+
+    activeEntry.querySelectorAll('.block, .illus').forEach(el => el.classList.remove('in'));
     promptEl.classList.add('hidden');
-
-    if (currentScene < SCENES.length - 1) {
-      setTimeout(function () { enterScene(currentScene + 1); }, 900);
+    
+    if (current < TOTAL - 1) {
+      isTransitioning = true;
+      setTimeout(() => {
+        activeEntry.classList.remove('active');
+        enterEntry(current + 1);
+        isTransitioning = false;
+      }, 900);
     } else {
-      Audio.silence();
-      setTimeout(function () {
-        document.getElementById('curtain').classList.add('up');
-        promptEl.classList.add('hidden');
-      }, 600);
+      AudioEngine.silence();
+      openVolumes();
     }
   }
 
-  // Audio init on first interaction
-  var audioStarted = false;
-  function startAudio() {
-    if (!audioStarted) {
-      audioStarted = true;
-      Audio.init();
-      audioNote.classList.add('hidden');
+  function tryStartAudio() {
+    if (!audioOn && entries && entries[current]) {
+      audioOn = true; AudioEngine.init();
+      if (entries[current].audio) AudioEngine.apply(entries[current].audio);
     }
   }
 
-  document.addEventListener('keydown', function (e) {
-    startAudio();
+  document.addEventListener('keydown', e => {
+    tryStartAudio();
     if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight') {
       e.preventDefault();
-      advance();
+      if (fullViewOpen) { closeFullPanel(); setTimeout(() => advance(), 350); }
+      else advance();
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'Escape') {
+      if (fullViewOpen) closeFullPanel();
     }
   });
-  document.addEventListener('click', function (e) {
-    startAudio();
-    advance();
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('.overlay') || e.target.closest('.top-btn') || e.target.closest('#orb-menu') || e.target.closest('.full-collapse')) return;
+    tryStartAudio();
+    if (fullViewOpen) { closeFullPanel(); setTimeout(() => advance(), 350); }
+    else advance();
   });
 
-  /* ═══════════════════════════════════════════════════════════════════════
-     GRAIN — canvas RAF
-     ═══════════════════════════════════════════════════════════════════════ */
-  (function grain() {
-    var c = document.getElementById('grain');
-    var x = c.getContext('2d');
-    var W = 0, H = 0;
-    function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
-    resize();
-    window.addEventListener('resize', resize);
+  /* ── Background: Film Grain ─────────────────────────────────────── */
+  (function(){
+    const gc = document.getElementById('grain'), gx = gc.getContext('2d');
+    let gW = 0, gH = 0;
+    function rz() { gW = gc.width = window.innerWidth; gH = gc.height = window.innerHeight; }
+    rz(); window.addEventListener('resize', rz);
+    
     function render() {
-      var id = x.createImageData(W, H);
-      var d = id.data;
-      for (var i = 0; i < d.length; i += 4) {
-        var v = Math.random() * 255 | 0;
-        d[i] = d[i+1] = d[i+2] = v;
-        d[i+3] = (Math.random() * 28 + 5) | 0;
+      if (gW <= 0 || gH <= 0) return;
+      const id = gx.createImageData(gW, gH), d = id.data;
+      for(let i = 0; i < d.length; i += 4) {
+        const v = Math.random() * 255 | 0;
+        d[i] = d[i+1] = d[i+2] = v; d[i+3] = (Math.random() * 30 + 10) | 0;
       }
-      x.putImageData(id, 0, 0);
+      gx.putImageData(id, 0, 0);
     }
     (function loop() { render(); requestAnimationFrame(loop); })();
   })();
 
-  /* ═══════════════════════════════════════════════════════════════════════
-     CONWAY'S GAME OF LIFE
-     ═══════════════════════════════════════════════════════════════════════ */
-  (function gol() {
-    var c = document.getElementById('gol');
-    var ctx = c.getContext('2d');
-    var CELL = 6;
-    var cols, rows, grid, next;
-    var mode = 'normal', dead = false, rstTid = null;
+  /* ── Background: Game of Life ───────────────────────────────────── */
+  (function(){
+    const gc = document.getElementById('gol'), gx = gc.getContext('2d');
+    const CELL = 6;
+    let cols = 0, rows = 0, grid, next, mode = 'normal', dead = false, rstTid = null, golColor = '#fff';
 
+    function fetchColor() { golColor = getComputedStyle(document.body).getPropertyValue('--gol').trim() || '#fff'; }
     function resize() {
-      c.width = window.innerWidth; c.height = window.innerHeight;
-      cols = Math.ceil(c.width / CELL); rows = Math.ceil(c.height / CELL);
-      initGrid();
+      const w = window.innerWidth, h = window.innerHeight;
+      if (w === 0 || h === 0) return;
+      gc.width = w; gc.height = h; cols = Math.ceil(w / CELL); rows = Math.ceil(h / CELL);
+      grid = Array.from({length: rows}, () => Array.from({length: cols}, () => Math.random() < 0.12 ? 1 : 0));
+      next = Array.from({length: rows}, () => new Array(cols).fill(0));
+      dead = false; fetchColor();
     }
-    function initGrid() {
-      grid = Array.from({ length: rows }, function () {
-        return Array.from({ length: cols }, function () {
-          return Math.random() < 0.12 ? 1 : 0;
-        });
-      });
-      next = Array.from({ length: rows }, function () { return new Array(cols).fill(0); });
-      dead = false;
-    }
-    function nbr(g, r, col) {
-      var n = 0;
-      for (var dr = -1; dr <= 1; dr++)
-        for (var dc = -1; dc <= 1; dc++)
-          if (!(dr === 0 && dc === 0))
-            n += g[(r+dr+rows)%rows][(col+dc+cols)%cols];
+    function nbr(g, r, c) {
+      let n = 0;
+      for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++)
+        if (!(dr === 0 && dc === 0)) n += g[(r + dr + rows) % rows][(c + dc + cols) % cols];
       return n;
     }
     function step() {
       if (mode === 'dying' && !dead) {
-        for (var r = 0; r < rows; r++)
-          for (var col = 0; col < cols; col++)
-            grid[r][col] = 0;
-        dead = true;
-        rstTid = setTimeout(function () {
-          mode = 'glider'; initGrid(); seedGlider();
-        }, 2200);
-        return;
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) grid[r][c] = 0;
+        dead = true; rstTid = setTimeout(() => { mode = 'glider'; resize(); seedGlider(); }, 2200); return;
       }
-      for (var r = 0; r < rows; r++) {
-        for (var col = 0; col < cols; col++) {
-          var k = nbr(grid, r, col);
-          next[r][col] = (grid[r][col] ? (k===2||k===3) : (k===3)) ? 1 : 0;
-        }
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        const k = nbr(grid, r, c); next[r][c] = (grid[r][c] ? (k === 2 || k === 3) : (k === 3)) ? 1 : 0;
       }
-      var t = grid; grid = next; next = t;
+      let t = grid; grid = next; next = t;
     }
     function seedGlider() {
-      var cx = Math.floor(cols * 0.25), cy = Math.floor(rows * 0.35);
-      [[0,1,0],[0,0,1],[1,1,1]].forEach(function (row, dr) {
-        row.forEach(function (v, dc) { if (v) grid[(cy+dr)%rows][(cx+dc)%cols] = 1; });
-      });
+      const cx = Math.floor(cols * 0.25), cy = Math.floor(rows * 0.35);
+      [[0,1,0], [0,0,1], [1,1,1]].forEach((row, dr) => { row.forEach((v, dc) => { if (v) grid[(cy + dr) % rows][(cx + dc) % cols] = 1; }); });
     }
     function draw() {
-      ctx.clearRect(0, 0, c.width, c.height);
-      ctx.fillStyle = '#ffffff';
-      for (var r = 0; r < rows; r++)
-        for (var col = 0; col < cols; col++)
-          if (grid[r][col])
-            ctx.fillRect(col*CELL, r*CELL, CELL-1, CELL-1);
+      if (cols === 0 || rows === 0) return;
+      gx.clearRect(0, 0, gc.width, gc.height); gx.fillStyle = golColor;
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) if (grid[r][c]) gx.fillRect(c * CELL, r * CELL, CELL - 1, CELL - 1);
     }
     function loop() { step(); draw(); requestAnimationFrame(loop); }
+
     window.addEventListener('resize', resize);
+    window.__gol = { setMode: (m) => { mode = m; if (rstTid) { clearTimeout(rstTid); rstTid = null; } if (m === 'normal') resize(); else if (m === 'dying') dead = false; }, updateColor: fetchColor };
     resize(); loop();
-    window.__gol = {
-      setMode: function (m) {
-        mode = m;
-        if (rstTid) { clearTimeout(rstTid); rstTid = null; }
-        if (m === 'normal') initGrid();
-        else if (m === 'dying') dead = false;
-      }
-    };
   })();
 
-  /* BOOT */
-  setTimeout(function () { enterScene(0); }, 400);
+  /* ── Boot ───────────────────────────────────────────────────────── */
+  document.body.className = 'sch-dark in-menu';
+  if (window.__gol) window.__gol.updateColor();
+  openVolumes();
+
 })();
 </script>
-
 </body>
 </html>
