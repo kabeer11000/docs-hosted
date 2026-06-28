@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Void</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   VOID — a visual novel in fragments
+   ═══════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #ffffff;
+  --gray:  rgba(200, 200, 200, 0.6);
+  --red:   #880015;
+  --font:  'Playfair Display', Georgia, 'Times New Roman', serif;
+  --size:  clamp(1.05rem, 1.6vw, 1.25rem);
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: var(--font);
+  font-size: var(--size);
+  color: var(--white);
+  line-height: 2;
+  cursor: default;
+  user-select: none;
+}
+
+/* ── Layer 1: Conway's Game of Life ───────────────────────────────── */
+#gol {
+  position: fixed;
+  inset: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.12;
+}
+
+/* ── Layer 2: Grain canvas ─────────────────────────────────────────── */
+#grain {
+  position: fixed;
+  inset: 0;
+  width: 100%; height: 100%;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0.09;
+}
+
+/* ── Layer 3: Black hole ────────────────────────────────────────────── */
+#bh {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 680px; height: 680px;
+  border-radius: 50%;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(circle,
+    #000 0%, #000 24%,
+    rgba(0,0,0,0.88) 44%,
+    rgba(0,0,0,0.38) 65%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 140px  60px rgba(0,0,0,0.88),
+    0 0 380px 130px rgba(0,0,0,0.35);
+  animation: bh-pulse 44s ease-in-out infinite;
+  transition: width 3s, height 3s, box-shadow 3s, opacity 2.5s;
+}
+@keyframes bh-pulse {
+  0%,  100% { opacity: 0.62; transform: translate(-50%,-50%) scale(1);   }
+  50%        { opacity: 1;    transform: translate(-50%,-50%) scale(1.05); }
+}
+#bh.sz-1 {
+  width: 900px; height: 900px;
+  box-shadow: 0 0 200px 90px rgba(0,0,0,0.9), 0 0 540px 200px rgba(0,0,0,0.46);
+  animation: bh-pulse 32s ease-in-out infinite;
+}
+#bh.sz-2 {
+  width: 1150px; height: 1150px;
+  box-shadow: 0 0 270px 110px rgba(0,0,0,0.9), 0 0 740px 290px rgba(0,0,0,0.52);
+  animation: bh-pulse 20s ease-in-out infinite;
+}
+#bh.dead { opacity: 0; }
+
+/* ── Layer 4: Curtain ──────────────────────────────────────────────── */
+#curtain {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 500;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+#curtain.up { opacity: 1; }
+
+/* ── Stage ──────────────────────────────────────────────────────────── */
+#stage {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+}
+
+/* ── Scene ──────────────────────────────────────────────────────────── */
+.scene {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10vh 16vw;
+}
+.scene.active { display: flex; }
+
+/* ── Text blocks ────────────────────────────────────────────────────── */
+.lbl {
+  font-size: 0.7rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(200,200,200,0.18);
+  margin-bottom: 5vh;
+}
+
+.block {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 1.1s ease, transform 1.1s ease;
+  max-width: 52ch;
+}
+.block.in { opacity: 1; transform: translateY(0); }
+
+.w { color: var(--white); margin-bottom: 3.5vh; }
+.g { color: var(--gray); font-style: italic; margin-bottom: 2.5vh; }
+.r { color: var(--red);   margin-top: 2vh; }
+
+/* ── SVG illustrations ──────────────────────────────────────────────── */
+.illus {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  margin-top: 4vh;
+}
+.illus.in { opacity: 0.82; }
+
+#flower-svg { width: clamp(60px, 8vw, 100px); }
+#flower-svg circle,
+#flower-svg line,
+#flower-svg path {
+  stroke: white;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#shoes-svg { width: clamp(100px, 13vw, 155px); }
+#shoes-svg path {
+  stroke: white;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── Audio prompt ─────────────────────────────────────────────────── */
+#audio-note {
+  position: fixed;
+  top: 4vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(200,200,200,0.12);
+  z-index: 20;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+#audio-note.hidden { opacity: 0; }
+
+/* ── Prompt ─────────────────────────────────────────────────────────── */
+#prompt {
+  position: fixed;
+  bottom: 5vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(200,200,200,0.14);
+  z-index: 20;
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+  white-space: nowrap;
+}
+#prompt.hidden { opacity: 0; }
+
+/* ── Progress dots ─────────────────────────────────────────────────── */
+#progress {
+  position: fixed;
+  bottom: 5vh;
+  right: 8vw;
+  display: flex;
+  gap: 5px;
+  z-index: 20;
+  pointer-events: none;
+}
+.pdot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: rgba(200,200,200,0.1);
+  transition: background 0.4s, transform 0.4s;
+}
+.pdot.done   { background: rgba(200,200,200,0.38); }
+.pdot.active { background: rgba(200,200,200,0.8); transform: scale(1.5); }
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 580px) {
+  .scene { padding: 8vh 8vw; }
+  #bh       { width: 480px; height: 480px; }
+  #bh.sz-1 { width: 680px; height: 680px; }
+  #bh.sz-2 { width: 880px; height: 880px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="gol"></canvas>
+<canvas id="grain"></canvas>
+<div id="bh"></div>
+<div id="curtain"></div>
+
+<div id="audio-note">click anywhere to enable audio</div>
+<div id="prompt">space · click to continue</div>
+
+<div id="progress">
+  <div class="pdot" id="d0"></div>
+  <div class="pdot" id="d1"></div>
+  <div class="pdot" id="d2"></div>
+  <div class="pdot" id="d3"></div>
+  <div class="pdot" id="d4"></div>
+  <div class="pdot" id="d5"></div>
+</div>
+
+<div id="stage">
+
+  <!-- SCENE 1: SEPTEMBER -->
+  <div class="scene active" id="sc0">
+    <p class="lbl block">September</p>
+    <p class="w block">I had been rehearsing the line all day. Staring at it in my notes app. Considering every possible scenario.</p>
+    <p class="w block">"I love your shoes," I said. Casually.</p>
+    <svg class="illus" id="shoes-svg" viewBox="0 0 240 90" fill="none">
+      <ellipse cx="52" cy="52" rx="42" ry="18" stroke-width="1.4"/>
+      <ellipse cx="52" cy="46" rx="42" ry="14" stroke-width="1.4"/>
+      <line x1="30" y1="38" x2="74" y2="38" stroke-width="1"/>
+      <line x1="32" y1="38" x2="32" y2="32" stroke-width="1"/>
+      <line x1="42" y1="38" x2="42" y2="32" stroke-width="1"/>
+      <line x1="52" y1="38" x2="52" y2="32" stroke-width="1"/>
+      <line x1="62" y1="38" x2="62" y2="32" stroke-width="1"/>
+      <ellipse cx="188" cy="52" rx="42" ry="18" stroke-width="1.4"/>
+      <ellipse cx="188" cy="46" rx="42" ry="14" stroke-width="1.4"/>
+      <line x1="166" y1="38" x2="210" y2="38" stroke-width="1"/>
+      <line x1="168" y1="38" x2="168" y2="32" stroke-width="1"/>
+      <line x1="178" y1="38" x2="178" y2="32" stroke-width="1"/>
+      <line x1="188" y1="38" x2="188" y2="32" stroke-width="1"/>
+      <line x1="198" y1="38" x2="198" y2="32" stroke-width="1"/>
+    </svg>
+  </div>
+
+  <!-- SCENE 2: THE GRASS -->
+  <div class="scene" id="sc1">
+    <p class="lbl block">The Grass</p>
+    <p class="w block">She started texting me while sitting right in front of me.</p>
+    <p class="w block">Then she came over and sat beside me. We shared playlists. It was kind of cute.</p>
+  </div>
+
+  <!-- SCENE 3: THE CONCERT -->
+  <div class="scene" id="sc2">
+    <p class="lbl block">The Concert In Our Rooms</p>
+    <p class="g block">Travis Scott's beats filled the air.</p>
+    <p class="g block">We sang. Not just the words — the spaces between them.</p>
+    <p class="g block">We fell asleep connected.</p>
+    <p class="g block">Somewhere across the city. Still together.</p>
+  </div>
+
+  <!-- SCENE 4: THE BOUQUET -->
+  <div class="scene" id="sc3">
+    <p class="lbl block">November 7 — The Bouquet</p>
+    <svg class="illus" id="flower-svg" viewBox="0 0 120 200" fill="none">
+      <line x1="60" y1="200" x2="60" y2="100" stroke-width="1.5"/>
+      <path d="M60 150 Q42 140 35 150 Q42 160 60 152" stroke-width="1"/>
+      <path d="M60 165 Q78 155 85 165 Q78 175 60 167" stroke-width="1"/>
+      <ellipse cx="60" cy="72" rx="12" ry="22" stroke-width="1.2"/>
+      <ellipse cx="82" cy="82" rx="12" ry="22" stroke-width="1.2" transform="rotate(72 60 100)"/>
+      <ellipse cx="76" cy="108" rx="12" ry="22" stroke-width="1.2" transform="rotate(144 60 100)"/>
+      <ellipse cx="44" cy="108" rx="12" ry="22" stroke-width="1.2" transform="rotate(-144 60 100)"/>
+      <ellipse cx="38" cy="82" rx="12" ry="22" stroke-width="1.2" transform="rotate(-72 60 100)"/>
+      <circle cx="60" cy="100" r="10" stroke-width="1.2"/>
+      <circle cx="60" cy="100" r="4" fill="white" fill-opacity="0.15"/>
+    </svg>
+    <p class="w block" style="margin-top:4vh">The satisfaction of seeing her smile when I handed her the bouquet was enough of a reward.</p>
+  </div>
+
+  <!-- SCENE 5: NOVEMBER 22 — THE END -->
+  <div class="scene" id="sc4">
+    <p class="lbl block">November 22 — The End</p>
+    <p class="w block">She had a long list of questions.</p>
+    <p class="w block">I answered every question except one.</p>
+    <p class="g block">"What do you want us to be now?"</p>
+    <p class="w block">I teared up. I didn't have an answer.</p>
+    <p class="r block">"I don't think I can be with you. It hurts too much."</p>
+  </div>
+
+  <!-- SCENE 6: THE VOID -->
+  <div class="scene" id="sc5">
+    <p class="w block">I love her, with every fiber of my being.</p>
+    <p class="w block">And I know she loves me too.</p>
+    <p class="w block">I just messed it all up.</p>
+  </div>
+
+</div><!-- /stage -->
+
+<script>
+(function () {
+  'use strict';
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     AUDIO ENGINE — generative drone, tension, noise
+     ═══════════════════════════════════════════════════════════════════════ */
+  var Audio = (function () {
+    var ctx = null;
+    var master = null;
+    var initialized = false;
+    var currentScene = 0;
+
+    // Layers
+    var drone1, drone2, drone3;   // sine wave drones
+    var noiseNode;                // filtered noise
+    var droneGain = [], droneOsc = [];
+
+    // Scene audio configs
+    // pitch: base frequency in Hz
+    // tension: 0=calm, 1=tense
+    // noiseAmt: how much noise (0-1)
+    // color: LP filter cutoff for noise
+    var SCENE_AUDIO = [
+      { pitch: 80,  tension: 0.05, noiseAmt: 0.08, color: 400  },  // sc0: September — quiet anticipation
+      { pitch: 90,  tension: 0.08, noiseAmt: 0.06, color: 350  },  // sc1: Grass — gentle warmth
+      { pitch: 110, tension: 0.12, noiseAmt: 0.07, color: 300  },  // sc2: Concert — intimate, slight tension
+      { pitch: 130, tension: 0.25, noiseAmt: 0.10, color: 280  },  // sc3: Bouquet — sweetness with unease
+      { pitch: 65,  tension: 0.55, noiseAmt: 0.18, color: 220  },  // sc4: Nov22 — heavy, oppressive
+      { pitch: 50,  tension: 0.80, noiseAmt: 0.25, color: 180  },  // sc5: Void — hollow, fading
+    ];
+
+    function init() {
+      if (initialized) return;
+      try {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        master = ctx.createGain();
+        master.gain.value = 0;
+        master.connect(ctx.destination);
+        // Fade master in over 2 seconds
+        master.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 2);
+
+        // Create 3 layered drones (sine waves, slightly detuned)
+        for (var i = 0; i < 3; i++) {
+          var osc = ctx.createOscillator();
+          var g = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = 80 * (i === 1 ? 1.003 : i === 2 ? 0.997 : 1);
+          g.gain.value = 0;
+          osc.connect(g);
+          g.connect(master);
+          osc.start();
+          droneOsc.push(osc);
+          droneGain.push(g);
+        }
+
+        // Noise via white noise buffer
+        var bufLen = ctx.sampleRate * 4;
+        var buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+        var data = buf.getChannelData(0);
+        for (var j = 0; j < bufLen; j++) data[j] = (Math.random() * 2 - 1) * 0.3;
+
+        noiseNode = ctx.createBufferSource();
+        noiseNode.buffer = buf;
+        noiseNode.loop = true;
+
+        var noiseFilter = ctx.createBiquadFilter();
+        noiseFilter.type = 'lowpass';
+        noiseFilter.frequency.value = 400;
+        noiseFilter.Q.value = 0.5;
+
+        var noiseGain = ctx.createGain();
+        noiseGain.gain.value = 0;
+
+        noiseNode.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(master);
+        noiseNode.start();
+
+        // Store for crossfading
+        noiseNode._gain = noiseGain;
+        noiseNode._filter = noiseFilter;
+
+        // Initialize drone gains
+        droneGain[0].gain.value = 1;
+        droneGain[1].gain.value = 0.6;
+        droneGain[2].gain.value = 0.4;
+
+        initialized = true;
+
+        // Apply initial scene
+        applyScene(0);
+      } catch (e) {
+        // Audio not supported
+      }
+    }
+
+    function applyScene(idx) {
+      if (!initialized || !ctx) return;
+      var cfg = SCENE_AUDIO[idx];
+      var now = ctx.currentTime;
+      var dur = 3.5; // crossfade duration
+
+      // Drone pitch — each layer at different harmonics
+      droneOsc[0].frequency.linearRampToValueAtTime(cfg.pitch,         now + dur);
+      droneOsc[1].frequency.linearRampToValueAtTime(cfg.pitch * 1.498, now + dur); // perfect fifth
+      droneOsc[2].frequency.linearRampToValueAtTime(cfg.pitch * 2.0,   now + dur); // octave
+
+      // Drone volume — tension increases lower drone, relaxes others
+      var droneVol = 0.4 + cfg.tension * 0.5;
+      droneGain[0].gain.linearRampToValueAtTime(droneVol,            now + dur);
+      droneGain[1].gain.linearRampToValueAtTime(droneVol * 0.55,      now + dur);
+      droneGain[2].gain.linearRampToValueAtTime(droneVol * 0.3,      now + dur);
+
+      // Noise — rises with tension
+      var noiseVol = cfg.noiseAmt;
+      noiseNode._gain.gain.linearRampToValueAtTime(noiseVol, now + dur);
+
+      // Filter cutoff — tense = darker (lower), calm = brighter
+      var cutoff = cfg.color - cfg.tension * 100;
+      noiseNode._filter.frequency.linearRampToValueAtTime(cutoff, now + dur);
+
+      // Master volume breathes slightly with tension
+      var masterVol = 0.15 + cfg.tension * 0.08;
+      master.gain.linearRampToValueAtTime(masterVol, now + dur);
+    }
+
+    function silence() {
+      if (!initialized || !ctx || !master) return;
+      master.gain.linearRampToValueAtTime(0, ctx.currentTime + 4);
+    }
+
+    return { init: init, applyScene: applyScene, silence: silence };
+  })();
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     SCENE SEQUENCE
+     ═══════════════════════════════════════════════════════════════════════ */
+  var SCENES = [
+    { id: 'sc0', gol: 'normal', bh: 'none',  illus: 'shoes-svg'  },
+    { id: 'sc1', gol: 'normal', bh: 'none',  illus: null         },
+    { id: 'sc2', gol: 'normal', bh: 'none',  illus: null         },
+    { id: 'sc3', gol: 'normal', bh: 'sz-1',  illus: 'flower-svg' },
+    { id: 'sc4', gol: 'dying',  bh: 'sz-2',  illus: null         },
+    { id: 'sc5', gol: 'glider', bh: 'dead',  illus: null         },
+  ];
+
+  var currentScene = 0;
+  var promptEl  = document.getElementById('prompt');
+  var audioNote = document.getElementById('audio-note');
+
+  function enterScene(idx) {
+    currentScene = idx;
+    var sc = SCENES[idx];
+
+    // Progress dots
+    document.querySelectorAll('.pdot').forEach(function (d, i) {
+      d.classList.remove('active', 'done');
+      if (i < idx) d.classList.add('done');
+      else if (i === idx) d.classList.add('active');
+    });
+
+    // Switch scene
+    document.querySelectorAll('.scene').forEach(function (s) { s.classList.remove('active'); });
+    document.getElementById(sc.id).classList.add('active');
+
+    // Black hole
+    var bh = document.getElementById('bh');
+    bh.className = '';
+    if (sc.bh !== 'none') bh.classList.add(sc.bh);
+
+    // Game of Life
+    if (window.__gol) window.__gol.setMode(sc.gol);
+
+    // Audio crossfade
+    Audio.applyScene(idx);
+
+    // Fade out illustrations
+    document.querySelectorAll('.illus').forEach(function (el) { el.classList.remove('in'); });
+    document.querySelectorAll('#' + sc.id + ' .block').forEach(function (b) { b.classList.remove('in'); });
+
+    // Fade in blocks with stagger
+    var blocks = document.getElementById(sc.id).querySelectorAll('.block');
+    blocks.forEach(function (b, i) {
+      setTimeout(function () { b.classList.add('in'); }, 200 + i * 380);
+    });
+
+    // Fade in illustration
+    if (sc.illus) {
+      setTimeout(function () {
+        document.getElementById(sc.illus).classList.add('in');
+      }, 200 + blocks.length * 380 + 200);
+    }
+
+    // Show prompt after everything fades in
+    promptEl.classList.add('hidden');
+    var illusDelay = sc.illus ? 200 + blocks.length * 380 + 1400 : 0;
+    setTimeout(function () { promptEl.classList.remove('hidden'); }, 200 + blocks.length * 380 + illusDelay + 500);
+  }
+
+  function advance() {
+    var sceneEl = document.getElementById(SCENES[currentScene].id);
+    sceneEl.querySelectorAll('.block').forEach(function (b) { b.classList.remove('in'); });
+    sceneEl.querySelectorAll('.illus').forEach(function (el) { el.classList.remove('in'); });
+    promptEl.classList.add('hidden');
+
+    if (currentScene < SCENES.length - 1) {
+      setTimeout(function () { enterScene(currentScene + 1); }, 900);
+    } else {
+      Audio.silence();
+      setTimeout(function () {
+        document.getElementById('curtain').classList.add('up');
+        promptEl.classList.add('hidden');
+      }, 600);
+    }
+  }
+
+  // Audio init on first interaction
+  var audioStarted = false;
+  function startAudio() {
+    if (!audioStarted) {
+      audioStarted = true;
+      Audio.init();
+      audioNote.classList.add('hidden');
+    }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    startAudio();
+    if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      advance();
+    }
+  });
+  document.addEventListener('click', function (e) {
+    startAudio();
+    advance();
+  });
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     GRAIN — canvas RAF
+     ═══════════════════════════════════════════════════════════════════════ */
+  (function grain() {
+    var c = document.getElementById('grain');
+    var x = c.getContext('2d');
+    var W = 0, H = 0;
+    function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    function render() {
+      var id = x.createImageData(W, H);
+      var d = id.data;
+      for (var i = 0; i < d.length; i += 4) {
+        var v = Math.random() * 255 | 0;
+        d[i] = d[i+1] = d[i+2] = v;
+        d[i+3] = (Math.random() * 28 + 5) | 0;
+      }
+      x.putImageData(id, 0, 0);
+    }
+    (function loop() { render(); requestAnimationFrame(loop); })();
+  })();
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     CONWAY'S GAME OF LIFE
+     ═══════════════════════════════════════════════════════════════════════ */
+  (function gol() {
+    var c = document.getElementById('gol');
+    var ctx = c.getContext('2d');
+    var CELL = 6;
+    var cols, rows, grid, next;
+    var mode = 'normal', dead = false, rstTid = null;
+
+    function resize() {
+      c.width = window.innerWidth; c.height = window.innerHeight;
+      cols = Math.ceil(c.width / CELL); rows = Math.ceil(c.height / CELL);
+      initGrid();
+    }
+    function initGrid() {
+      grid = Array.from({ length: rows }, function () {
+        return Array.from({ length: cols }, function () {
+          return Math.random() < 0.12 ? 1 : 0;
+        });
+      });
+      next = Array.from({ length: rows }, function () { return new Array(cols).fill(0); });
+      dead = false;
+    }
+    function nbr(g, r, col) {
+      var n = 0;
+      for (var dr = -1; dr <= 1; dr++)
+        for (var dc = -1; dc <= 1; dc++)
+          if (!(dr === 0 && dc === 0))
+            n += g[(r+dr+rows)%rows][(col+dc+cols)%cols];
+      return n;
+    }
+    function step() {
+      if (mode === 'dying' && !dead) {
+        for (var r = 0; r < rows; r++)
+          for (var col = 0; col < cols; col++)
+            grid[r][col] = 0;
+        dead = true;
+        rstTid = setTimeout(function () {
+          mode = 'glider'; initGrid(); seedGlider();
+        }, 2200);
+        return;
+      }
+      for (var r = 0; r < rows; r++) {
+        for (var col = 0; col < cols; col++) {
+          var k = nbr(grid, r, col);
+          next[r][col] = (grid[r][col] ? (k===2||k===3) : (k===3)) ? 1 : 0;
+        }
+      }
+      var t = grid; grid = next; next = t;
+    }
+    function seedGlider() {
+      var cx = Math.floor(cols * 0.25), cy = Math.floor(rows * 0.35);
+      [[0,1,0],[0,0,1],[1,1,1]].forEach(function (row, dr) {
+        row.forEach(function (v, dc) { if (v) grid[(cy+dr)%rows][(cx+dc)%cols] = 1; });
+      });
+    }
+    function draw() {
+      ctx.clearRect(0, 0, c.width, c.height);
+      ctx.fillStyle = '#ffffff';
+      for (var r = 0; r < rows; r++)
+        for (var col = 0; col < cols; col++)
+          if (grid[r][col])
+            ctx.fillRect(col*CELL, r*CELL, CELL-1, CELL-1);
+    }
+    function loop() { step(); draw(); requestAnimationFrame(loop); }
+    window.addEventListener('resize', resize);
+    resize(); loop();
+    window.__gol = {
+      setMode: function (m) {
+        mode = m;
+        if (rstTid) { clearTimeout(rstTid); rstTid = null; }
+        if (m === 'normal') initGrid();
+        else if (m === 'dying') dead = false;
+      }
+    };
+  })();
+
+  /* BOOT */
+  setTimeout(function () { enterScene(0); }, 400);
+})();
+</script>
+
+</body>
+</html>
