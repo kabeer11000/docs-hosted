@@ -1,0 +1,286 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font: 'Playfair Display', Georgia, serif;
+  --size: clamp(1.05rem, 1.6vw, 1.25rem);
+
+  /* Timing tokens: consolidates the mix of bare "ease" and one-off cubic-beziers
+     that used to be scattered through this file into one consistent motion system. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);    /* fast start, gentle settle — reveals, entrances */
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);     /* slow start, quick finish — one-way dismissals */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1); /* symmetric — bidirectional toggles, color/theme blends */
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: var(--font);
+  font-size: var(--size);
+  line-height: 2;
+  cursor: default;
+  user-select: none;
+  transition: background-color 1.5s var(--ease-inout), color 1.5s var(--ease-inout);
+}
+
+/* --- Thematic Schemes --- */
+.sch-dark { background: #000; color: #fff; --fg: #ffffff; --dim: rgba(255, 255, 255, 0.5); --mut: rgba(255, 255, 255, 0.22); --red: #8b0010; --bar: rgba(255, 255, 255, 0.15); --ctr: rgba(255, 255, 255, 0.25); --gol: #ffffff; }
+.sch-inv { background: #f5f5f0; color: #111; --fg: #111111; --dim: rgba(0, 0, 0, 0.5); --mut: rgba(0, 0, 0, 0.22); --red: #8b0010; --bar: rgba(0, 0, 0, 0.15); --ctr: rgba(0, 0, 0, 0.25); --gol: #111111; }
+.sch-red { background: #0a0000; color: #f0e0e0; --fg: #f0e0e0; --dim: rgba(220, 160, 160, 0.45); --mut: rgba(200, 140, 140, 0.2); --red: #cc2211; --bar: rgba(200, 140, 140, 0.15); --ctr: rgba(200, 140, 140, 0.25); --gol: #f0e0e0; }
+
+/* --- Background Canvases --- */
+#gol { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.12; transition: opacity 1.2s var(--ease-out); }
+#grain { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 200; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay; }
+
+/* --- The Void (Black Hole) --- */
+#bh {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1);
+  width: 800px; height: 800px; border-radius: 50%;
+  z-index: 2; pointer-events: none;
+  background: radial-gradient(circle, var(--bg-center, #000) 0%, var(--bg-mid, rgba(0,0,0,0.98)) 25%, var(--bg-edge, rgba(0,0,0,0.8)) 45%, transparent 75%);
+  box-shadow: 0 0 160px 80px var(--bg-glow1, rgba(0,0,0,0.88)), 0 0 450px 160px var(--bg-glow2, rgba(0,0,0,0.4));
+  filter: blur(25px); /* Creates the ethereal, gaseous falloff */
+  animation: bh-pulse 44s ease-in-out infinite;
+  transition: width 2.5s var(--ease-inout), height 2.5s var(--ease-inout), box-shadow 2.5s var(--ease-inout), opacity 3.5s var(--ease-inout), background 1.2s var(--ease-inout), transform 1s var(--ease-out), filter 1.2s var(--ease-inout);
+}
+
+.sch-inv #bh { --bg-center: #f5f5f0; --bg-mid: rgba(245,245,240,0.98); --bg-edge: rgba(245,245,240,0.8); --bg-glow1: rgba(245,245,240,0.9); --bg-glow2: rgba(245,245,240,0.5); }
+
+@keyframes bh-pulse { 0%, 100% { opacity: 0.62; } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); } }
+
+#bh.sz-1 { width: 1050px; height: 1050px; box-shadow: 0 0 250px 120px var(--bg-glow1), 0 0 650px 250px var(--bg-glow2); filter: blur(35px); animation-duration: 32s; }
+#bh.sz-2 { width: 1350px; height: 1350px; box-shadow: 0 0 350px 160px var(--bg-glow1), 0 0 850px 350px var(--bg-glow2); filter: blur(50px); animation-duration: 20s; }
+/* animation: none stops the infinite bh-pulse keyframes from fighting this opacity transition — without it, the pulse kept overriding the fade every frame instead of letting it settle at 0 */
+#bh.dead { opacity: 0; animation: none; }
+
+/* --- UI Elements & Transitions --- */
+#curtain { position: absolute; inset: 0; z-index: 500; pointer-events: none; background: inherit; opacity: 0; transition: opacity 1.2s var(--ease-inout); }
+#curtain.up { opacity: 1; }
+
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 120;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 3vh 4vw; transition: opacity 0.5s var(--ease-out);
+}
+
+.top-btn { font-family: inherit; font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--dim); cursor: pointer; transition: color 0.2s var(--ease-out); background: none; border: 0; outline: none; }
+.top-btn:hover { color: var(--fg); }
+#vol-tag { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--dim); transition: color 0.2s var(--ease-out); }
+
+/* --- In-Menu State Triggers --- */
+body.in-menu #bh {
+  transform: translate(-50%, -50%) scale(0.01);
+  opacity: 0;
+  transition: transform 0.75s var(--ease-inout), opacity 0.5s var(--ease-out);
+  animation: none;
+}
+body.in-menu #stage, body.in-menu #prompt, body.in-menu #counter, body.in-menu #topbar {
+  opacity: 0 !important;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+/* --- 3D Floating Orb Menu --- */
+#orb-menu {
+  position: fixed; inset: 0; z-index: 100;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.75s var(--ease-out) 0.2s; /* Delay fade in slightly after collapse */
+  background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.6) 100%);
+}
+#orb-menu.active { opacity: 1; pointer-events: all; }
+
+.orb-menu-nav { position: absolute; top: 3vh; left: 4vw; z-index: 110; transition: opacity 0.3s var(--ease-out); }
+.orb-menu-nav .top-btn { color: rgba(255,255,255,0.6); }
+.orb-menu-nav .top-btn:hover { color: #fff; }
+
+.orb-container { position: relative; width: 100vw; height: 100vh; perspective: 1000px; }
+
+.orb-wrapper {
+  position: absolute;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transform: translate(calc(-50% + var(--px, 0px)), calc(-50% + var(--py, 0px)));
+  transition: left 0.75s var(--ease-out), top 0.75s var(--ease-out), opacity 0.5s var(--ease-out);
+}
+
+.ow-1 { left: 25vw; top: 45vh; z-index: 3; }
+.ow-2 { left: 50vw; top: 55vh; z-index: 2; }
+.ow-3 { left: 75vw; top: 35vh; z-index: 1; }
+
+.orb {
+  position: relative;
+  width: var(--orb-size, clamp(140px, 16vw, 240px));
+  height: var(--orb-size, clamp(140px, 16vw, 240px));
+  border-radius: 50%; cursor: pointer;
+  /* NOTE: width/height duration below is paired with the setTimeout in selectVolume() in app.js — keep them in sync */
+  transition: width 0.9s var(--ease-out), height 0.9s var(--ease-out), transform 0.5s var(--ease-out);
+}
+.orb::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  box-shadow: inset -15px -20px 40px rgba(0,0,0,0.6), inset 10px 10px 30px rgba(255,255,255,0.15);
+  pointer-events: none; transition: opacity 0.5s var(--ease-out);
+}
+
+/* Gradients purposefully matched to root background themes so expansion is seamless */
+.orb-1 { background: radial-gradient(circle at 50% 50%, #222 0%, #000 60%, #000 100%); box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.08); }
+.orb-2 { background: radial-gradient(circle at 50% 50%, #fff 0%, #f5f5f0 60%, #f5f5f0 100%); box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 50px rgba(0,0,0,0.15); }
+.orb-3 { background: radial-gradient(circle at 50% 50%, #411 0%, #0a0000 60%, #0a0000 100%); box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 60px rgba(200,30,30,0.3); }
+
+.orb-wrapper:hover .orb { transform: scale(1.08); }
+
+/* Orb Selection States */
+.orb-wrapper.selected {
+  left: 50vw !important; top: 50vh !important; z-index: 500;
+  --px: 0px !important; --py: 0px !important;
+}
+.orb-wrapper.selected .orb {
+  --orb-size: 200vmax; /* Expands dimensions natively, avoiding pixelation */
+  transform: scale(1) !important;
+}
+.orb-wrapper.selected .orb::after { opacity: 0; }
+.orb-wrapper.fade-out { opacity: 0 !important; pointer-events: none; transition: opacity 0.4s var(--ease-in); }
+
+.orb-label {
+  position: absolute; top: 120%;
+  text-align: center; color: rgba(255,255,255,0.7);
+  font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+  transition: opacity 0.3s var(--ease-out); text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+  pointer-events: none; white-space: nowrap;
+}
+.orb-wrapper:hover .orb-label { color: #fff; }
+
+.orb-title { font-size: 1.1rem; font-style: italic; text-transform: none; letter-spacing: 0.05em; margin-top: 1vh; opacity: 0.5; transition: opacity 0.3s var(--ease-out); }
+.orb-wrapper:hover .orb-title { opacity: 0.9; }
+
+/* Responsive adjustments */
+@media(max-width: 768px) {
+  .ow-1 { left: 50vw; top: 20vh; }
+  .ow-2 { left: 50vw; top: 50vh; }
+  .ow-3 { left: 50vw; top: 80vh; }
+}
+
+/* --- Old Entries Overlay --- */
+.overlay { position: fixed; inset: 0; z-index: 150; display: none; flex-direction: column; padding: 10vh 10vw; overflow-y: auto; background: inherit; }
+.overlay.show { display: flex; animation: sel-in 0.4s var(--ease-out) forwards; }
+.overlay.hide { animation: sel-out 0.25s var(--ease-in) forwards; }
+
+@keyframes sel-in { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes sel-out { to { opacity: 0; transform: translateY(-10px); } }
+
+.sel-back { font-family: inherit; font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mut); cursor: pointer; opacity: 0.5; margin-bottom: 6vh; transition: opacity 0.2s var(--ease-out); background: none; border: 0; align-self: flex-start; }
+.sel-back:hover { opacity: 1; color: var(--fg); }
+.sel-title { font-size: clamp(1.4rem, 2.5vw, 2.2rem); letter-spacing: 0.05em; margin-bottom: 0.5vh; color: var(--fg); }
+.sel-sub { font-size: 0.75rem; color: var(--dim); font-style: italic; margin-bottom: 6vh; }
+.sel-entry { display: flex; align-items: center; justify-content: space-between; padding: 3vh 0; border-bottom: 1px solid var(--bar); cursor: pointer; opacity: 0.6; transition: padding-left 0.25s var(--ease-out), opacity 0.2s var(--ease-out), border-color 0.2s var(--ease-out); }
+.sel-entry:hover { padding-left: 2vw; opacity: 1; }
+.sel-entry.current { opacity: 1; }
+.sel-entry.current .sel-e-num { opacity: 1; }
+.sel-entry.current .sel-e-dot { opacity: 0.9; transform: scale(1.2); }
+.sel-e-num { font-size: 0.6rem; letter-spacing: 0.3em; width: 4vw; flex-shrink: 0; color: var(--mut); opacity: 0.5; transition: opacity 0.2s var(--ease-out); }
+.sel-e-name { flex: 1; font-size: clamp(1rem, 1.4vw, 1.2rem); color: var(--fg); }
+.sel-e-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); opacity: 0.2; transition: opacity 0.2s var(--ease-out), transform 0.2s var(--ease-out); }
+
+/* --- Stage & Text Entries --- */
+#stage { position: absolute; inset: 0; z-index: 10; transition: opacity 0.5s var(--ease-out); }
+.entry { position: absolute; inset: 0; display: none; flex-direction: column; align-items: flex-start; justify-content: center; padding: 10vh 16vw; }
+.entry.active { display: flex; }
+.lbl { font-size: 0.7rem; letter-spacing: 0.42em; text-transform: uppercase; margin-bottom: 5vh; color: var(--mut); transition: color 0.6s var(--ease-inout); }
+.block { opacity: 0; transform: translateY(8px); transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out), color 0.6s var(--ease-inout); max-width: 52ch; }
+.block.in { opacity: 1; transform: translateY(0); }
+.w { margin-bottom: 3.5vh; color: var(--fg); }
+.g { font-style: italic; margin-bottom: 2.5vh; color: var(--dim); }
+.r { margin-top: 2vh; color: var(--red); }
+
+/* --- Illustrations --- */
+.illus { opacity: 0; transition: opacity 0.9s var(--ease-out); margin-top: 5vh; color: var(--fg); }
+.illus.in { opacity: 0.85; }
+.illus path, .illus circle, .illus line, .illus ellipse { stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1200; stroke-dashoffset: 1200; transition: stroke-dashoffset 2.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.illus.in path, .illus.in circle, .illus.in line, .illus.in ellipse { stroke-dashoffset: 0; }
+#flower-svg { width: clamp(60px, 8vw, 100px); }
+#shoes-svg { width: clamp(100px, 13vw, 155px); }
+
+/* --- Footer Elements --- */
+#prompt { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); font-size: 0.65rem; letter-spacing: 0.32em; text-transform: uppercase; z-index: 20; pointer-events: none; transition: opacity 0.5s var(--ease-out), color 0.6s var(--ease-inout); white-space: nowrap; color: var(--mut); }
+#prompt.hidden { opacity: 0; }
+#counter { position: absolute; bottom: 5vh; right: 8vw; font-size: 0.6rem; letter-spacing: 0.25em; z-index: 20; pointer-events: none; color: var(--ctr); transition: color 0.6s var(--ease-inout), opacity 0.5s var(--ease-out); }
+
+/* --- Full Entry Reveal Panel --- */
+.entry-full {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  justify-content: safe center; /* falls back to top-anchored + scrollable once content overflows, instead of clipping the start */
+  padding: 10vh 16vw 14vh;
+  transform: translateY(100%);
+  /* NOTE: transform duration below is paired with PANEL_CLOSE_ADVANCE_DELAY in app.js — keep them in sync */
+  transition: transform 0.55s var(--ease-out), opacity 0.35s var(--ease-out);
+  opacity: 0;
+  pointer-events: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  z-index: 5;
+  /* Frosted layer — inherits bg color */
+  background: inherit;
+}
+.entry-full::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--bar);
+  opacity: 0.6;
+}
+.entry.active .entry-full.revealed {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+/* Excerpt drifts up slightly as full panel rises */
+.entry.active.excerpt-dimmed > .lbl,
+.entry.active.excerpt-dimmed > .block,
+.entry.active.excerpt-dimmed > .illus {
+  transform: translateY(-18px) !important;
+  opacity: 0 !important;
+  transition: opacity 0.35s var(--ease-out), transform 0.45s var(--ease-out) !important;
+}
+
+.full-label {
+  font-size: 0.62rem; letter-spacing: 0.38em; text-transform: uppercase;
+  color: var(--mut); margin-bottom: 4vh; opacity: 0.7;
+}
+.full-date {
+  font-size: 0.6rem; letter-spacing: 0.2em; color: var(--dim); margin-bottom: 5vh;
+  font-style: italic; opacity: 0.6;
+}
+.full-para {
+  max-width: 58ch; margin-bottom: 3vh;
+  color: var(--fg); line-height: 1.95; font-size: clamp(0.95rem, 1.35vw, 1.1rem);
+  opacity: 0; transform: translateY(10px);
+  /* NOTE: duration below is paired with the paragraph stagger in openFullPanel() in app.js — keep them in sync */
+  transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
+}
+.full-para.italic { font-style: italic; color: var(--dim); }
+.full-para.accent { color: var(--red); margin-top: 1vh; }
+.full-para.in { opacity: 1; transform: translateY(0); }
+
+/* Scroll hint in the prompt when on excerpt layer */
+.prompt-scroll { display: inline; }
+.prompt-advance { display: inline; }
+.in-full-view #prompt .prompt-scroll { display: none; }
+.in-full-view #prompt .prompt-advance { display: inline; }
+
+/* Collapse button inside full panel */
+.full-collapse {
+  position: absolute; top: 3.5vh; right: 4vw;
+  font-family: inherit; font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--mut); opacity: 0.4; cursor: pointer; background: none; border: 0; outline: none;
+  transition: opacity 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+.full-collapse:hover { opacity: 0.9; color: var(--fg); }
+
+/* Scroll progress pip row */
+.full-scroll-hint {
+  position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);
+  font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mut);
+  opacity: 0.35; white-space: nowrap; pointer-events: none;
+}
+
+@media(max-width: 768px) { .entry-full { padding: 8vh 8vw 14vh; } }
+
+@media(max-width: 768px) { .entry { padding: 8vh 8vw; } .sel-e-num { width: 10vw; } }
